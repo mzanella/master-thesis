@@ -1,7 +1,74 @@
 \chapter{Related Work}
 \label{chap:rel_wk}
 
+In the following chapter are reported some research work related on topics
+covered in this thesis. 
 
+\section{Related work on NFV}
+In the market it is possible to find different research and implementations in
+different scenarios.
+
+An example is the one described in~\cite{nogales2018nfv}in
+which the ETSI MANO architecture is proposed on the top a network of drones.
+This open a wide range of possibilities, allowing to provide connectivity even
+in areas where there are not an infrastructure or it is momentarily not
+available, for example after a natural disaster. Even if this solution is really
+flexible and quick to deploy need a VIM infrastructure to which to be connected.
+
+In~\cite{yu2015network}, authors are instead oriented on the study of the
+opportunity to deploy the overall system on the top of multi-tenant cloud
+architectures. Challenges in this context concern mainly the possibility to
+enforce requirements, such as policies and performance. Moreover, demanding to
+the cloud infrastructure the resource management means that it must be able to
+optimize the resource utilization.
+
+A significant proposal was presented in~\cite{cziva2017container}, that is one
+of the first paper that evaluate the possibility to use container technology on
+the network edges. This work is based on~\cite{cziva2015container} in which the
+authors define an architecture to orchestrate containers, whose components can
+be mapped on ETSI MANO architectural definition. The usage of containers enable
+the possibility of deployment on less powerful devices and putting them on
+network edge open a wide range of opportunities to classify packets and treat
+them in an adequate manner as soon as possible. Another paper that propose the
+use of containers for VNF is~\cite{hoang2018extended}, in which function are
+deployed both on Openstack and in Kubernetes as VIMs, using TOSCA definition to
+describe containers and Tacker for the management as network function
+orchestrator, even if they does not provide an evaluation of the solution.
+Another aspect to consider is that they not mention the possibility to composed
+their function. Finally, as author stated, standard does not support fully
+features for container by now.
+
+
+\section{Related work on network slicing}
+Network slicing is one of the most important technology improvements that allows
+to move towards the 5G technology. In~\cite{chartsias2017sdn} is presented a
+network slicing approach based on SDN in multi-tenancy scenarios. The testbed
+implemented propose a centralized approach to manage physical and virtual
+resources in different slices. In~\cite{peuster2016medicine} instead, authors
+describe a NFV-based platform, that allows management and orchestration showing
+the importance of virtual function in the network slicing context.
+
+This emerging technology open a wide number of new challenges. An example is the
+possibility to ensure proper security on communication, that is harder even due
+to the concept of shared services, that could not provide suitable isolation. 
+In~\cite{kotulski2017end} authors describes possible security issues, stating
+that the isolation required may vary depending on usage scenarios. Even the ETSI
+MANO system consider isolation only in terms of performance level. Other
+challenges are highlighted in~\cite{li2017network}, in which in addition to
+isolation and security concerns, point out that resource allocation and
+sharing algorithms possible problems and that some virtualization method, used
+in wired context, cannot be applied in wireless counterpart.
+
+\section{Related work on VNF management and orchestration}
+The MANO component in ETSI architecture, goal is to manage lifecycle of network
+function to offer end-to-end services. As underlined in~\cite{kotulski2017end}
+this reference model is very general and leave to implementation the task to
+solve some problems. This architectural component also is accountable of the SFC
+path flexibility. Some implementations, like~\cite{soares2015toward}
+and~\cite{abujoda2015midas} does not allow path updating, removing the
+possibility to change chain composition during its lifetime.
+
+\section{Related work on SFCs}
 
 Since the SFC technology was proposed many work came out proposing different
 implementation solutions. In this part there is an overview of some of them.
