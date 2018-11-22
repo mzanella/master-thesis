@@ -1,6 +1,6 @@
-\section{System performances}
+\chapter{Tests and metrics}
 
-\subsection{Test system}
+\section{Test environment}
 All the machine used for testing purposes are Openstack virtual machines, with
 the following specifications:
 \begin{itemize}
@@ -13,7 +13,7 @@ infrastructure developed was running;
 was used as client and on which run script to send packets.
 \end{itemize}
 
-\subsection{RTT measurement}
+\section{RTT measurement}
 Regarding the delivery performance, a metric to take in account is the
 \emph{round trip time}(RTT), that is the time interval between the instant in
 which a packet is sent and when the response is received. To analyze it we
@@ -127,7 +127,7 @@ As we can see values are really low, indicating no particular problems on the
 network, even if the lowest result is always the one calculated without the
 chain.
 
-\subsection{Resilience}
+\section{Resilience}
 Regarding the overall system resilience, we performed some test in which some
 nodes of our solution are stopped during a transmission. As a matter of fact
 that one of the most important requirements of our implementation is to make
@@ -140,10 +140,7 @@ system must be able to recognize that the SF is brought up again.
 
 During this test test we forward 500 packets (1 packet each 50ms) from a sender
 host to a receiver through an SFC of length 3. The \texttt{yaml} file
-describing the chain is the following:
-
-\lstinputlisting[caption={Kubernetes YAML configuration that has been used for
-resilience test}, captionpos=b]{res/code/fault_test.yaml}
+describing the chain is reported in~\ref{chap:testyaml}:
 
 The previous configuration can be represented as in
 Figure~\ref{chap:tests:sec:fault:img:testfaultconf}.
