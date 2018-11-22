@@ -87,3 +87,80 @@ definition, stop a running SFC and update it. \\
 \caption{Table of requirements}
 \label{chap:prjan:tab:req}\\
 \end{longtable}
+
+\section{Technology evaluation}
+
+\subsection{Openstack}
+\begin{figure}[t]
+  \centering \includegraphics[scale=0.58]{openstack_logo}
+  \caption{Openstack logo}
+  \label{chap:prjan:img:openstack_logo}
+\end{figure}
+Openstack was released in 2010 and developed by Rackspace Hosting and
+NASA~\cite{openstackWebsite}. It is a free and open-source platform for cloud
+computing released under Apache license. It is mostly developed to be an IaaS,
+installing the software aìon bare-metal resource to virtualize physical resource
+that can be eventually made available to end-users. It has a modular
+architecture composed be different components, most significant for the project:
+\begin{itemize}
+\item \emph{Nova} manages the computing resources;
+\item \emph{Glance} manages server images;
+\item \emph{Keystone} is accountable of the identities;
+\item \emph{Horizon} dashboard to manage Openstack;
+\item \emph{Neutron} manages networking;
+\item \emph{Cinder} provides persistent storage to compute instances.
+\end{itemize}
+then other components can be added.
+
+Openstack usage in this project is twofold. All machines on which we deployed
+and tested our solution where virtual machine running on top of the University
+Openstack instance. Moreover, in the early stages of the project, we performed
+an Openstack installation on VM running on the Openstack instance of
+the University. Since in this installation we had full access to all the
+functionalities of the software (at the contrary that in the other instance), we
+were able to install all the components that we wanted and to evaluate different
+technologies.
+
+
+\subsection{Kubernetes}
+\begin{figure}[h]
+  \centering \includegraphics[scale=0.35]{kubernetes_logo}
+  \caption{Kubernetes Logo}
+  \label{chap:intro:img:k8s_logo}
+\end{figure}
+Kubernetes was released in 2014 and developed by Google. It is an open-source
+orchestrator for containers that allows automating deployment, scaling and
+management.
+
+
+\subsection{Docker}
+\begin{figure}[t]
+  \centering \includegraphics[scale=0.7]{docker_logo}
+  \caption{Official Docker logo}
+  \label{chap:intro:img:docker_logo}
+\end{figure}
+
+\subsection{Docker Compose}
+
+\subsection{Docker Swarm}
+
+\subsection{OpenvSwitch}
+\begin{figure}[h]
+ \centering \includegraphics[scale=0.45]{ovs}
+ \caption{OpenvSwitch logo}
+ \label{chap:prjan:img:ovs_logo}
+\end{figure}
+
+\subsection{Floodlight}
+\begin{figure}[h]
+ \centering \includegraphics[scale=0.6]{floodlight}
+ \caption{Floodlight logo}
+ \label{chap:prjan:img:floodlight_logo}
+\end{figure}
+
+\subsection{Openbaton}
+\begin{figure}[h]
+  \centering \includegraphics[scale=0.45]{openbaton_logo}
+  \caption{Openbaton logo}
+  \label{chap:prjan:img:openbaton_logo}
+\end{figure}
