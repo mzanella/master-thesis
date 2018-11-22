@@ -48,7 +48,7 @@ capable of supporting the dynamic nature of future network functions and
 intelligent applications while lowering operating costs through simplified
 hardware, software, and management~\cite{sezer2013we}, that allows to configure
 network in a programmatically way, possibly enhancing monitoring and
-performances. One of the main principles of SDN architecture is to decouple the
+performance. One of the main principles of SDN architecture is to decouple the
 packet forwarding process, \emph{data plane}, from the routing one, the so
 called \emph{control plane}. The architecture also contemplate that network
 intelligence and state are logically centralized~\cite{fundation2012software}. 
@@ -204,7 +204,7 @@ and only largely non-interoperable within other vendor solutions. New Internet
 scenarios, that include IoT and the increasing number of services to spread
 multimedia data (Skype, Netflix, Spotify, \dots), requires more flexible
 functions and faster network deployments. This detachment provides greater
-flexibility to scale VNF based on traffic and performances and also improve the
+flexibility to scale VNF based on traffic and performance and also improve the
 automation of function deploy and update: removing dedicated hardware also will
 reduce costs machines and for maintenance.
 
@@ -304,10 +304,10 @@ and services instances during their lifetimes.
 
 \subsection{VNF challenges}
 This new concept open a plethora of challenges~\cite{han2015network}. Regarding
-performances, functions running on general purposes servers cloud affect
+performance, functions running on general purposes servers cloud affect
 throughput and latency, moreover the capacity of the virtualized function can be
 less than the hardware and software version. To reach comparable levels in terms
-of performances efficient algorithms are needed, as a excellent resource
+of performance efficient algorithms are needed, as a excellent resource
 management. Another problems is the VNF management. In case of hardware
 functions resources are almost equivalent, at the contrary, virtualized ones
 could have costs and values that differs significantly depending on the point of
@@ -537,4 +537,111 @@ metadata and information on the path that it must traverse. It is possible that
 the size of the packet, in this manner, exceed the MTU on some link in the
 chain. Solution must take in account this problem and the cost to overcome it.
 
+\subsection{5G}
+The Next Generation Mobile Network (NGMN) alliance defined in the 5G
+white paper~\cite{alliance20155g} the
+requirements and the architecture of the new telecommunications standard. 
+This change in communication system is pushed by the increasing mobile network
+connectivity and it expected to be released in 2020~\cite{iwamura2015ngmn}. This
+new standard is supported by some of the major players in mobile connectivity 
+(as Bell, Telecom, Vodafone). Main goals are to provide better end-to-end
+connectivity, increasing communication speed, lower communication latency and
+the support of new scenarios emerged in the past few years, as IoT and
+machine-to-machine communication, high user mobility or ultra-reliable
+communications (e.g. for E-Health Service). Moreover, this new standard define
+requirements even for other uses cases, such as provide connectivity in case of
+natural disasters. 
 
+\subsection{Comparison with LTE}
+5G technology define some improvements compared to Long Term Evolution (LTE)
+technology. Firstly, data rate per user will be 10 times higher from the 100Mb/s
+on average, instead data rate per cell will be 100 times higher. Even the
+end-to-end latency will be enhance, decreasing it from the actual 50ms in the
+region of 10 times. To support high mobility uses cases there will be an
+increase int terms of 1.5\% on the supported speed of nodes, from the 350km/h.
+Finally, the number of users per square kilometer will increase of 100 times
+from the 2000 supported by the LTE cells. Some of the requirements will be
+satisfied working on the radio frequencies communication layer. Larger radio
+spectrum bands, higher frequencies and better forms of channel access (both in
+terms of hardware and in terms of how it is used) will help to enhance the
+performance. Another important change is the time required to deploy the
+services,
+from 90 hours to 90 minutes~\cite{networld20202014role}.
+
+\subsection{Architecture}
+\begin{figure}[t]
+  \centering
+  \includegraphics[scale=0.55]{5garchitecture}
+  \caption[5G Architecture]{5G Architecture~\cite{alliance20155g}}
+  \label{chap:background:img:5garchitecture}
+\end{figure}
+
+The 5G architecture is decomposed in three layers~\cite{alliance20155g}:
+\begin{description}
+\item [Infrastructure resource layer:] represent the physical resources of the
+network, including access nodes, could nodes (e.g. used for storage), devices
+that support the new standard, networking nodes and exposes all these resources
+to upper layers through virtualization;
+
+\item [Business enablement layer:] library of function required by a network as
+modular building block ans set of configuration parameters for certain parts.
+Software can be retrieved from repositories and the function implemented can be
+orchestrated and monitor using APIs;
+
+\item[Business application layer:] applications and services that utilize the 5G
+platform.
+\end{description}
+
+Those layers are articulated by an orchestration entity that manage the
+virtualized network end-to-end and it is accountable to translate application
+layer requirements into services and network slices, finally mapping them into
+infrastructure resources.
+
+\subsection{Enablers}
+As the improvement into the physical connectivity, there are some other enablers
+that will make the requirements of 5G standard satisfiable. Virtualization will
+allow to remove dedicated hardware that are deployed on the network and open
+the possibility to developed other technologies as virtual network functions,
+software defined network and network slicing. The latter make possible to 5G
+system to handle resource in a manner to ensure specific QoS and SLA, based on
+required latency, security and reliability, exploiting the control plane.
+Moreover, even virtualization helps to reach those quality levels, providing
+auto-scaling capabilities.
+
+\section{VIBeS project}
+This work is part of a wider project called VIBeS (Virtualized network functions
+Implementation for Broadband Satellite networks)~\cite{vibesesa}. The sake of
+the project is to develop a architecture and an implementation to optimize the
+service IP-based, where the communication path include a satellite
+communication, with a 5G compliant solution. The project have to redesign
+Performance Enhancing Proxy (PEP) agents, to make them suitable to be
+implemented as virtual functions. 
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[scale=0.7]{pep}
+  \caption[Performance Enhancing Proxy example]{Performance Enhancing Proxy
+  example}
+  \label{chap:background:img:pep}
+\end{figure}
+
+PEPs are network agent used to improve performance of Internet protocols on path
+where there are links that has some characteristics that can affect the overall
+functioning~\cite{border2001rfc3135}. There are different types of PEPs and
+they can work at different layers. Usually, to solve the problem of large
+round-trip delay in satellite communications using PEPs the TCP end-to-end
+semantic is broken into multiple connections.
+
+The final NFV-PEP environment that will be created must be as flexible as
+possible, allowing large-scale distributed deployment and the
+management and orchestration of the function have to follow the ETSI MANO
+architecture. The final solution will follow the architecture depicted in~
+\ref{chap:background:img:vibesarch}.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.09]{vibesarch}
+  \caption[VIBeS proposed architecture]{VIBeS proposed
+  architecture~\cite{vibesesa}}
+  \label{chap:background:img:vibesarch}
+\end{figure}
