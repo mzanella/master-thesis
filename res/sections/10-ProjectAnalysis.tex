@@ -132,7 +132,17 @@ technologies.
 \end{figure}
 Kubernetes was released in 2014 and developed by Google. It is an open-source
 orchestrator for containers that allows automating deployment, scaling and
-management written in Go.
+management written in Go. This product is thought to provide the simplicity of
+management of PaaS, mixed with flexibility of IaaS, allowing the portability on
+different infrastructure provides. Differently of usual PaaS it does not
+operates at hardware level, but at container level, creating a virtualized layer
+without explicitly concerning with physical resources. In a Kubernetes cluster,
+real hosts are called Nodes, and they can be assigned with different roles or
+specifications. One or more Nodes must have the role of \emph{master}. Master
+has the task to orchestrate containers deployed. 
+
+Even if Kubernetes is container-centric it allow to change the virtualization
+software and use for instance virtual machine software.
 
 
 \subsection{Docker}
@@ -141,10 +151,86 @@ management written in Go.
   \caption{Official Docker logo}
   \label{chap:intro:img:docker_logo}
 \end{figure}
+Docker was released in 2013 and developed by Docker Inc. It is an open source
+software that operates the operating-system-virtualization (the so called 
+\emph{containerization}) written in Go. This typology of virtualization exploit
+the kernel level feature of allowing the existence of multiple isolated
+user-space instances: in this way all containers running on the same host
+utilize a the same operating system kernel. That is why containers are more
+lightweight compared to virtual machines, in which even the kernel is
+duplicated, requiring more resources. Docker is based on a previous OS-level
+virtualization technology that is the Linux Containers (LXC). LXCs utilize the 
+\texttt{cgroups} functionality that allows limitation and prioritization of
+resources (CPU, memory, block I/O, network, etc.) and namespace isolation
+functionality that allows complete isolation of an applications. Docker extends
+LXC with a kernel and an application-level API that together run processes in
+isolation. Docker containers are created using base images, that can define just
+the OS fundamentals, or it can consist of a prebuilt application stack.
+Commands can be executed manually or automatically using Dockerfiles.
+
+\emph{Docker Engine} is a client-server application mainly composed by i) a
+server \texttt{dockerd}, that is a daemon process, ii) a REST API that specifies
+interfaces that programs can use to talk to the daemon and iii) a command line
+interface client (that is the \texttt{docker} command).
+
+\emph{Docker Hub} instead is the SaaS service that allow to share and manage
+images created.
+
+In the thesis this technology was used to create images in which run our
+components that will be deployed on Kubernetes. Images where automatically build
+using Docker Hub from the Dockerfiles specified in our Github repository.
 
 \subsection{Docker Compose}
+\begin{figure}[t]
+  \centering \includegraphics[scale=0.5]{dockercompose_logo}
+  \caption{Docker Compose logo}
+  \label{chap:intro:img:docker_logo}
+\end{figure}
+Docker Composed was released in 2013 and developed by Docker Inc. It is a tool
+to define and run multiple-container applications, automating their launch.
+Application configuration is specified using a single YAML file, that make
+easier to specify interaction among the containers to which it is composed.
+Pieces in which the application can be decomposed are called
+\emph{services}. They does not specify only the image that has to be run but
+it defines even the configuration (such as ports to use or resource limitation).
+Docker Compose also enable the capability to scale the number of running
+instances of the same container. This product has other features. It create
+different environments for each Compose definition and preserves data used by 
+certain service. Thus, if at startup it finds any containers from previous runs,
+it copies the volumes from the old to the new one, avoiding data loss. Finally
+it caches the configuration used to create a container and if restarting a a
+service there are no changes, Compose re-uses the existing ones.
+
+In the project this tools was used to develop and test components in a
+controlled environment. Also, before deploying new parts of the system on
+Kubernetes, their integration with the other components were test on Compose,
+even because deploying a new component on Kubernetes is quite a cumbersome task.
 
 \subsection{Docker Swarm}
+\begin{figure}[t]
+  \centering \includegraphics[scale=1.2]{dockerswarm_logo}
+  \caption{Docker Swarm logo}
+  \label{chap:intro:img:docker_logo}
+\end{figure}
+Docker Swarm was released in 2014 and developed by Docker Inc. It allows to
+manage multiple Docker Engines clustered and seen as a single logical unit.
+Physical hosts, named Nodes, are splitted into \emph{managers}, that have the
+task to manage the cluster, maintaining cluster state and orchestrating services
+and Swarm API calls. Docker CLI can be used to orchestrate container within a
+swarm, making its use transparent as it make transparent the underlying
+infrastructure. It offers scalability features and make possible the definition
+of overlay network for services. Application can be deployed on a Swarm
+describing them using Docker Compose, moving this tool from a one node
+environment to a clustered one.
+
+This technology was evaluated choosing the clustered environment to which deploy
+out solution. Finally, the choice was Kubernetes because it has more
+customization capabilities, that make it more flexible. Moreover, Kubernetes has
+auto-scaling features that are not directly available in Docker Swarm. This is
+can be really important in case of deploying SFC in environments in which
+traffic load can change dramatically. Moreover, Kubernetes supports up to 5000
+nodes, instead Swarm up to 1000. Finally, more information on Kubernetes was
+found.
 
 \subsection{OpenvSwitch}
 \begin{figure}[h]
@@ -152,6 +238,17 @@ management written in Go.
  \caption{OpenvSwitch logo}
  \label{chap:prjan:img:ovs_logo}
 \end{figure}
+OpenvSwitch (OVS) was developed in 2009, is an open-source implementation,
+released under Apache 2.0 license, of a multi-layer virtual switch. It provides
+a switching stack for hardware virtualization. It was designed to enable network
+automation using programmatic extension and support a variety of different
+network protocols. It support the possibility of bridging traffic between a
+virtualized environment, both using virtual machines and container, and the
+outside world. It supports OpenFlow protocol and it can be used in conjunction
+of \emph{controller} in SDN context to define traffic routing. In the latter
+scenario allows, also, to tie together all the virtual machines instances of a
+server and serves as entrypoint to overlay network running on top of physical
+networks. It is also used in redirect traffic in service chaining use cases.
 
 \subsection{Floodlight}
 \begin{figure}[h]
@@ -159,6 +256,19 @@ management written in Go.
  \caption{Floodlight logo}
  \label{chap:prjan:img:floodlight_logo}
 \end{figure}
+Floodlight was released in 2011 and it is and open-source, community developed
+project, distributed under Apache 2.0 license. It is an OpenFlow Java-based
+Controller written in Java that work both with physical and virtual switches
+that support OpenFlow protocol. Its goal is the traffic flows orchestration in
+SDN: Floodlight provides the possibility to define rules to route traffic, that
+it will manage, applying the necessary instructions to the infrastructure on how
+traffic has to be handled.
+
+This product, in combination with OpenvSwitch was studied in the first part of
+the thesis, to better understand how some other SFC proposals and SDN solutions
+work and route traffic. It was lately abandoned due to architectural and
+implementation choices, that moved the task of routing traffic to other
+components.
 
 \subsection{Openbaton}
 \begin{figure}[h]
@@ -166,3 +276,38 @@ management written in Go.
   \caption{Openbaton logo}
   \label{chap:prjan:img:openbaton_logo}
 \end{figure}
+Openbaton is developed by the Institute Fraunhofer and it is an open-source
+platform that supply an implementation of the ETSI NFV MANO specification. It
+can be either installed as a normal program or run into containers from a Docker
+Compose definition. This framework is capable to orchestrate network services on
+different NFV Infrastructures. It can manage different VNFs ecosystems thanks
+its Generic VNFM and it is capable to compose them. It leaves to developers the
+possibility to integrate new VNFM using plugins and developed APIs and SDKs. It
+also support the VNF deployment on different VIMs, like Amazon Web Services and
+Openstack, allowing even in that case the possibility to increase the number of
+supported VIMs creating new drivers. Places to which VNF can be deployed are
+registered as Point of Presence, providing necessary access information.
+Openbaton supports VNFs auto-scaling management, based on monitoring information
+and fault management for failures that can occur on different levels. Monitoring
+is implemented with a plugin that exploit Zabbix. Lifecycle of VNFs compatible
+with this platform can be completely handled even from the dashboard. It also
+has a Marketplace to which Openbaton-compatible VNFs can be downloaded. Custom
+VNFs can be stored and run on demand following the Topology and Orchestration
+Specification for Cloud Applications (TOSCA) definition or YAML files.
+
+Openbaton was taken into account as ETSI compliant MANO for our solution, both
+because of its flexibility and possibility to extend it with plugins. Moreover
+it could allow us to register new VIM typology. Lately due to the difficulties
+to create a Kubernetes driver was abandoned.
+
+
+\subsection{Tacker}
+Tacker is an open-source software for NFV Orchestration, released under Apache
+2.0 license, Based on ETSI MANO Architectural Framework. This product is
+implemented to both work as Generic VNF Manager and NFV Orchestrator, enabling
+deployment and management of VNFs on infrastructures like Openstack. It can be
+added to an existing Openstack installation as a additional component. As
+Openbaton handle the entire lifecycle of VNF and monitor their status using
+Zabbix. Another analogy with Openbaton is that VNFs can be recorded following
+the TOSCA definition. Differently to Openbaton, instead, it seem to be designed
+to support different typologies of VIMs (as Kubernetes for example). 
