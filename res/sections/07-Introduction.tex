@@ -1,6 +1,61 @@
- % This is just a draft, nothing suitable for the final product: sources are in
- % form of a todo
- 
- % --- INTRODUCTION ---
 \chapter{Introduction}
 \label{chap:intro}
+Since its invention as a network of few computers owned by universities and
+research institutes in the US, the Internet has changed a lot. From a
+relatively homogeneous network in terms of connectivity and hosts capabilities,
+the Internet now allows very different peers, from mobile devices or objects to
+powerful servers, to communicate through a variety of fixed and mobile
+communication links. During this evolution, many different protocols and
+network equipment was used but in the course of the time there was a
+convergence to the IP protocol, not only for data communication but even for
+real-time, multimedia, conversational communication services in both fixed and
+mobile networks.
+
+In the last years, the Internet has moved from an essentially fixed network to
+a network accessed from mobile devices, using both Wi-Fi connections and data
+connections like GPRS, Edge, 3G, and LTE (Long Term Evolution). That raised
+also a number of new issues. First, mobile devices move and change location, so
+it is more difficult to route Internet traffic routing. Beyond this issue, most
+mobile devices can also jump from one access technology to another, such as
+switching between Wi-Fi and LTE connectivity. Finally, with the deployment of
+LTE networks, mobile networks traffic usage is becoming more and more
+heterogeneous, as voice communication and multimedia streaming. This emphasize
+the need for an appropriate quality of service, or at least a service level
+that allows the real-time constraints or traffic prioritization policies for
+different data types.
+
+These requirements are highlighted even by a new emerging traffic typology, the
+machine-to-machine communication. Nowadays the trend of smart objects make that
+an increasing variety of different objects will be connected to the Internet.
+These objects have usually different necessities and scarce resources in terms
+of energy, computation power and bandwidth.
+
+The heterogeneity into the traffic and the different Qualities of Service
+required posed different challenges to the network of the future. Network
+resource management and application-driven networking are suitable solution in
+order to optimize packets that run through the Internet backbone networks and
+allows application-specific enhancements. With the new 5G standards some of
+these features will be deployed thanks even to the Service Function Chaining
+technology. In this context network function, nowadays available only as a
+combination of vendor-specific devices, will be software programs that can be
+composed as ordered chains, to which packets must pass through. 
+
+In this thesis is proposed a simple implementation of a Service Function Chain
+inside a virtualized environment. The chain proposed exploit the capabilities
+of Docker container and Kubernetes as container orchestrator. Also a minimal
+implementation of software needed to manage and orchestrate the chains is
+provided, to allow basic functionalities as creation, deployment and deletion. 
+
+
+ \section{Document organization}
+ 
+ This thesis is organized as follows:
+ \begin{itemize}
+  \item Chapter~\ref{chap:background} describes background information about 5G 
+and the technologies used to build an ETSI compliant architecture
+  \item Chapter~\ref{chap:prjan} explains the analysis performed on the 
+requirements provided and the design choices performed.
+  \item Chapter~\ref{chap:archimpl} provides an in-depth view of the 
+high-level architectural implementation.
+  \item Chapter~\ref{chap:conclusions} wraps up the overall project experience.
+ \end{itemize}
