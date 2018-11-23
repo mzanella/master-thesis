@@ -1,2 +1,88 @@
-\chapter{VNF and Network Service implementation} 
-\label{chap:vnf_ns_impl}
+\chapter{Implementation}
+\label{chap:impl}
+
+In this chapter there is described the implementation of the solution that we
+proposed for the SFC system. Also the experimental implementation that allow us
+to reach the final solution are discussed and why they where abandoned.
+
+\section{How to reach virtual functions}
+The first issue to overcome in our implementation was how to make possible to
+reach Pods inside Kubernetes without specifying the IP of the machine on the top
+of which they are running. In fact, enabling that possibility would allowed us
+to create a flexible and scalable solution. In fact, decoupling Pods to physical
+machine let our proposal to be independent on the underlying infrastructure: the
+addition or the removal of hosts would be transparent for the code developed,
+demanding to Kubernetes the task of manage the change in computational and
+storage resources. Kubernetes services \todo{add reference} allowed us to
+overcome the problem. \todo{add Kubernetes services explanation}
+
+\subsection{Kubernetes Services}
+A Kubernetes service is an abstraction that defines a set of Pods and policies
+to access them. Pods referenced by a certain Service are usually selected with a
+\emph{Label Selector}. In general these labels, added to Pod specifications,
+does not provide uniqueness but identify a set of objects.
+In the snipped~\ref{chap:impl:lst:srv} there is an example of Service
+definition.The service create will be called \texttt{my-service} and targets TCP
+port 9376 on any Pods labelled with the selector \texttt{app=MyApp}. Kubernetes
+will assign to the Service an IP address (also called \emph{clusterIP}). 
+\texttt{port} filed in the definition is the port on which the Service can be
+reached, instead \texttt{targetPort} is the port on which traffic will be
+redirected on Pods. It can be either a valid port number or a string that
+identify port name of backend Pods, allowing more flexibility to Pod and Service
+creation. Supported protocols are TCP, UDP and SCTP. \texttt{kube-proxy} is
+accountable for implementing virtual IP for Services (other than Services with
+type \texttt{ExternalName}). 
+
+\begin{lstlisting}[caption={Example of Service definition},
+                   captionpos=b, language=yaml, label=chap:impl:lst:srv]
+kind: Service
+apiVersion: v1
+metadata:
+  name: my-service
+spec:
+  selector:
+    app: MyApp
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 9376
+\end{lstlisting}
+
+For Service discovery, there were \emph{environment variables} and \emph{DNS}.
+To Pods running on a certain Node \texttt{kubelet} add a set of variables for
+each Services, that can be used for referencing to it. In the former technique to
+discover services, instead, are used the DNS server cluster add-on. It watches
+Kubernetes API to be aware if new Services are created to add DNS records for
+them. In this way all Pods are able to do Service name resolution automatically.
+Services types can be:
+\begin{description}
+\item[ClusterIP:] to expose services only within the cluster, it is the default
+value;
+\item[NodePort:] to expose the service on a static port. Outside the cluster is
+reachable by requesting \verb!<NodeIP>:<NodePort>!
+\item[LoadBalancer:] to expose a service externally, using a cloud provider
+load balancer;
+\item[ExternalName:] to expose a service with the name expressed in the 
+\texttt{externalName}.
+\end{description}
+
+Exploiting that possibility, our implementation to reach a defined component in
+our solution have only to specify the name of the service and the port. To
+Kubernetes is in charge to decide which Pod to reach (if more replicas of the
+same function are available), resolving the location on which it is deployed.
+
+\section{Classification}
+
+\section{First review}
+
+\section{Second review}
+
+\section{Final proposal}
+\subsection{Ingresses end egresses}
+\subsection{Astaire}
+\subsection{Chain management}
+\subsection{Proxies}
+
+\subsection{Kubernetes deployment}
+
+\section{Implementation problems}

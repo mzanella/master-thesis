@@ -59,29 +59,21 @@ isolation and security concerns, point out that resource allocation and
 sharing algorithms possible problems and that some virtualization method, used
 in wired context, cannot be applied in wireless counterpart.
 
-\section{Related work on VNF management and orchestration}
-The MANO component in ETSI architecture, goal is to manage lifecycle of network
-function to offer end-to-end services. As underlined in~\cite{kotulski2017end}
-this reference model is very general and leave to implementation the task to
-solve some problems. This architectural component also is accountable of the SFC
-path flexibility. Some implementations, like~\cite{soares2015toward}
-and~\cite{abujoda2015midas} does not allow path updating, removing the
-possibility to change chain composition during its lifetime.
-
 \section{Related work on SFCs}
 
 Since the SFC technology was proposed many work came out proposing different
-implementation solutions. In this part there is an overview of some of them.
+implementation solutions came out~\cite{medhat2017service}. In this part there
+is an overview of some of them.
 
-\cite{GhaznaviSAB16} proposed an optimization model to calculate the optimal
-location of VNFs based on different metrics such as bandwidth, load balancing
-and routes. This decomposes the SFC on performance requirements eliminating the
-throughput bound of a chain to a single VNF or a single physical machine.
-Mathematical models developed was tested in a simulation environment. A critical
-enhancement to this work could be to test algorithm in a real environment, under
-different conditions of traffic load: if it efficient even in this scenario it
-can be useful to the orchestration and management part of the ecosystem because
-it can reduce resource waste.
+The work~\cite{GhaznaviSAB16} proposed an optimization model to calculate the
+optimal location of VNFs based on different metrics such as bandwidth, load
+balancing and routes. This decomposes the SFC on performance requirements
+eliminating the throughput bound of a chain to a single VNF or a single physical
+machine. Mathematical models developed was tested in a simulation environment. A
+critical enhancement to this work could be to test algorithm in a real
+environment, under different conditions of traffic load: if it efficient even in
+this scenario it can be useful to the orchestration and management part of the
+ecosystem because it can reduce resource waste.
 
 Other implementation tested in a simulated environment
 are~\cite{csoma2014escape} and~\cite{kim2016evaluations}. In both of them the
@@ -92,6 +84,15 @@ policies, and provisioning live management information on operating VNF
 instances, but no performance evaluation of the work is presented. In the latter
 case chains are identified by VLAN tag and the VNF chaining is created
 exploiting only using Floodlight controllers.
+
+A significant differentiation on SFC implementation proposal is whether a
+combination of NFV and SDN or if they are not adopted together. If no
+orchestration is available, SDN control plane is in charge to do so. Whether
+both of them are involved, different solutions are suggested. Another criteria
+that differentiate solutions is the SFC forwarding plane that could make use of
+NSH or not. Moreover some implementations, like~\cite{soares2015toward}
+and~\cite{abujoda2015midas} does not allow SFC updating, deploying only static
+chains.
 
 Another noteworthy work is~\cite{xia2015optical} that discuss the packet
 delivery through function chaining in high capacity networks exploiting
@@ -145,8 +146,9 @@ neither in terms of performances nor in terms of resilience. Fault recovering
 and autoscaling could be achieved only improving the system introducing other
 technologies, such as Docker Compose, Kubernetes or Docker Swarm.
 
-
-
-
-
+To the best of our knowledge, all general purposes solutions rely on virtual
+machines, lowering system performance due to overhead caused by hypervisor-based
+virtualization, or only provides a static, not fully virtualized solution for
+SFCs. Moreover, there are not suitable works that integrates Kubernetes to
+orchestrate and handle them.
 

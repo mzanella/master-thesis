@@ -333,3 +333,13 @@ OVS
 Zabbix
 entrypoint
 SDKs
+clusterIP
+targetPort
+SCTP
+impl
+lst
+MyApp
+targetPort
+externalName
+labelled
+srv

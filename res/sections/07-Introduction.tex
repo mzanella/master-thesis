@@ -35,27 +35,41 @@ required posed different challenges to the network of the future. Network
 resource management and application-driven networking are suitable solution in
 order to optimize packets that run through the Internet backbone networks and
 allows application-specific enhancements. With the new 5G standards some of
-these features will be deployed thanks even to the Service Function Chaining
-technology. In this context network function, nowadays available only as a
+these features will be deployed even thanks to the Service Function Chaining
+technology. In this context, network function, nowadays available only as a
 combination of vendor-specific devices, will be software programs that can be
-composed as ordered chains, to which packets must pass through. 
+composed as ordered chains, to which packets must pass through. This provide an
+high flexibility management to specific service and application traffic.
+Moreover, removing dedicated hardware of the network will open the possibility
+to deploy new function in a really short span of time as well as to update an
+exiting one. Finally, this emerging technology is able to enhance the quality of
+end-to-end services: providing a disparate set of chains for the different
+traffic typologies and enforcing the most suitable policies to meet service
+requirements will leverage the overall quality of the system. This concept, in
+conjunction to containers and new container orchestrators, like Kubernetes, make
+possible even to scale functions and function capabilities based on traffic load
+or user demand.
 
 In this thesis is proposed a simple implementation of a Service Function Chain
 inside a virtualized environment. The chain proposed exploit the capabilities
-of Docker container and Kubernetes as container orchestrator. Also a minimal
-implementation of software needed to manage and orchestrate the chains is
-provided, to allow basic functionalities as creation, deployment and deletion. 
+of Docker container and Kubernetes as container orchestrator. Furthermore, we
+described and developed the minimal instrumentation needed to manage and
+orchestrate the lifecycle of these chains.
 
+\section*{Document organization}
 
- \section{Document organization}
- 
- This thesis is organized as follows:
- \begin{itemize}
+This thesis is organized as follows:
+\begin{itemize}
   \item Chapter~\ref{chap:background} describes background information about 5G 
-and the technologies used to build an ETSI compliant architecture
+and the technologies used to build an ETSI compliant architecture;
+  \item Chapter~\ref{chap:rel_wk} discuss other work related to this topic;
   \item Chapter~\ref{chap:prjan} explains the analysis performed on the 
-requirements provided and the design choices performed.
-  \item Chapter~\ref{chap:archimpl} provides an in-depth view of the 
-high-level architectural implementation.
+requirements provided and the design choices performed;
+  \item Chapter~\ref{chap:archimpl} provides an high-level view of
+  the architecture proposed;
+  \item Chapter~\ref{chap:impl} describes in-depth the implementation;
+  \item Chapter~\ref{chap:tests} evaluates the software developed, giving some
+  metrics measured;
+  \item Chapter~\ref{chap:future} discuss possible future enhancements;
   \item Chapter~\ref{chap:conclusions} wraps up the overall project experience.
- \end{itemize}
+\end{itemize}
