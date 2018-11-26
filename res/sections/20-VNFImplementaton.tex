@@ -626,7 +626,21 @@ element of the chain and traffic will be redirected to an \egress{}.
 
 \subsection{Chain management}
 To handle chains and virtual functions we developed
-\harbor{}\footnote{\url{https://github.com/Augugrumi/harbor/}}
+\harbor{}\footnote{\url{https://github.com/Augugrumi/harbor/}}. This component
+work both as SFC and VNF orchestrator and it allows to save definitions of both
+of them as their update and deletion. We developed \harbor{} in a manner that it
+is not possible to deploy single VNFs. This because the single VNF does not
+allow the management of incoming and outgoing traffic without \ingresses{} and
+\egresses{}. This component is a prototype of a fully featured orchestrator
+even regarding VIM handling. In fact, due to time contraint the communication
+with Kubernetes APIs is implemented only on a basic level, allowing only some
+operation. \harbor{} is able to deploy for a definition previous given and to
+delete a running chain but munitor and scale features are really limited.
+Actually, \harbor{} implementation allows only to check if a chain is deployed
+or not as their components.
+
+\harbor{} is implemented in Java using Spark to expose a REST API with with is
+possible to handle SFCs. 
 
 
 \section{Implementation problems}
