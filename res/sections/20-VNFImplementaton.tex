@@ -616,6 +616,12 @@ return:
   $<sender,receiver>$; or
   \item data of the \egress{} used for the actual communication.
 \end{itemize}
+Local maps update its information periodically in an automated way: this make
+possible to be responsive to SFC updates or changes on Pods configuration. The
+update period is set to 2 minutes by default but further enhancement must set it
+more accurately. Since Pods are mortal for their nature a system to detect fault
+and update local maps: this will make the overall platform less prone to packet
+loss.
 
 The new NSH that \astaire{} will add to the packet to send will have the field
 \texttt{Time To Live} decremented by one and the field \texttt{Service Path
@@ -627,20 +633,109 @@ element of the chain and traffic will be redirected to an \egress{}.
 \subsection{Chain management}
 To handle chains and virtual functions we developed
 \harbor{}\footnote{\url{https://github.com/Augugrumi/harbor/}}. This component
-work both as SFC and VNF orchestrator and it allows to save definitions of both
-of them as their update and deletion. We developed \harbor{} in a manner that it
+work as the MANO of our platform. We developed \harbor{} in a manner that it
 is not possible to deploy single VNFs. This because the single VNF does not
 allow the management of incoming and outgoing traffic without \ingresses{} and
-\egresses{}. This component is a prototype of a fully featured orchestrator
+\egresses{}. This component is only a prototype of a fully featured orchestrator
 even regarding VIM handling. In fact, due to time contraint the communication
 with Kubernetes APIs is implemented only on a basic level, allowing only some
-operation. \harbor{} is able to deploy for a definition previous given and to
-delete a running chain but munitor and scale features are really limited.
-Actually, \harbor{} implementation allows only to check if a chain is deployed
-or not as their components.
+operation. It is implemented in Java using Spark to expose a REST API with with is
+possible to handle SFCs. Despite other components of this implementation 
+\harbor{} is not deployed on Kubernetes.
 
-\harbor{} is implemented in Java using Spark to expose a REST API with with is
-possible to handle SFCs. 
+\harbor{} handle both VNF and SFC catalogs: it is possible to get the list of
+saved definitions, to add and update an existing one and to remove one of them.
+Moreover, since it is an orchestrator it allows to launch a new SFC instance
+from a previous saved definition and to stop a running chain instance.
 
+An example of VNFs and SFC that can be deployed using \harbor{} and our platform
+is showed below. In~\ref{chap:impl:lst:vnfexample}. As explained in \todo{add
+reference to service} all the function that will run on Kubernetes are exposed
+using a Service, decoupling the use of a certain function to the way it can be
+called.
+\begin{lstlisting}[caption={Example of VNF definition}, captionpos=b,
+                   language=yaml, label=chap:impl:lst:vnfexample]
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+ name: astaire-deployment
+ namespace: default
+ labels:
+   k8s-app: astaire-vnf
+spec:
+ replicas: 1
+ selector:
+   matchLabels:
+     k8s-app: astaire-vnf
+ template:
+   metadata:
+     labels:
+       k8s-app: astaire-vnf
+       name: astaire-vnf
+   spec:
+     containers:
+       - name: astaire
+         image: augugrumi/astaire:latest
+         args: ["-u", "-r", "roulette-service:80"]
+         imagePullPolicy: Always
+         ports:
+           - name: udp
+             containerPort: 8767
+             protocol: UDP
+---
+kind: Service
+apiVersion: v1
+metadata:
+ name: astaire-service
+ namespace: default
+spec:
+ selector:
+   k8s-app: astaire-vnf
+ ports:
+   - name: udp
+     port: 8767
+     protocol: UDP
+ type: NodePort
+\end{lstlisting}
+
+In~\ref{chap:impl:lst:sfcexample} is shown an example of SFC definition. It is
+implemented using only as an array of VNFs definition. The array gives even the
+order of the functions in the chain.
+\begin{lstlisting}[caption={Example of SFC definition}, captionpos=b,
+                   language=json, label=chap:impl:lst:sfcexample]
+{
+    "ns" : [
+                {
+                    "id": "astaire-service"
+                },
+                ...
+            ]
+}
+\end{lstlisting}
+
+Once a definition of a chain is updated, this transformation is reflected to
+running intances of the SFC (if any) to make the system more flexibile.
+Monitoring functionalities implemented are really limited: \harbor{} can only
+provide information if a certain SFC is running and if components of that SFC
+instance are running. At this stage it is not developed to provide data on Pods
+faults or misbehaviours. Furthermore, not scalability features are implemented
+yet.
+
+Since \harbor{} is the MANO has to instantiate the SFCs routes that 
+\ingresses{}, \egresses{} and \astaire{} instances can use. 
 
 \section{Implementation problems}
+This final solution has still some issues both due to how we implemented the
+whole system and time constraints. \harbor{} is only an experimental
+implementation: as stated before a fully fuctional MANO must be able to provide
+more information on running SFCs and VNFs. In addition, the possibility to
+manual scaling element of a running chain can improve even more this component.
+Definition of the VNFs allows to define the ReplicaSet (since they are YAML
+file used by Kubernete) but a future release of this component must provide
+the possibility to define roules to autoscale. Kubernetes enable this
+opportunity taking advantage of \texttt{autoscaling/v2beta2} API
+version\footnote{\sloppy
+\url{https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/#autoscaling-on-multiple-metrics-and-custom-metrics}},
+in which the set of Pods can be increased/decreased basing on specified metrics.
+
+\roulette{}, that has 
