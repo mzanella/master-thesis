@@ -602,10 +602,31 @@ call a function in terms of sending a packet and waiting for the response. When
 the VNF has finished to treat the packet, based on the NSH removed before,
 calculate the next step of to which forward traffic and the new header. 
 
+To retrieve the next element \astaire{} reads the \texttt{Service Path
+Identifier} and the \texttt{Service Index} fields of the \texttt{Service Path
+Header}. After it checks in a local map if this values was used yet: in this
+case in the map are saved information (address, port) of the next element.
+Whether this information is not present it have to query \roulette{} to recover
+this data. The \texttt{Service Index} field is incremented before this check. In
+case the instance of \astaire{} is the last link of the SFC roulette will
+return:
+\begin{itemize}
+  \item the name of the \egress{} service in case that the current packet is the
+  first packet that traverse the chain exchanged between a certain pair
+  $<sender,receiver>$; or
+  \item data of the \egress{} used for the actual communication.
+\end{itemize}
+
+The new NSH that \astaire{} will add to the packet to send will have the field
+\texttt{Time To Live} decremented by one and the field \texttt{Service Path
+Identifier} increased by one. This mechanism also prevent the creation of
+cycles: as a metter of fact that either the \texttt{TTl} field will goes to $0$
+and the packet will be discarded or the \texttt{SPI} will no more point to an
+element of the chain and traffic will be redirected to an \egress{}.
 
 \subsection{Chain management}
+To handle chains and virtual functions we developed
+\harbor{}\footnote{\url{https://github.com/Augugrumi/harbor/}}
 
-
-\subsection{Kubernetes deployment}
 
 \section{Implementation problems}
