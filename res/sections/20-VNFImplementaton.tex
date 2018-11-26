@@ -315,7 +315,7 @@ handle it, allowing the automatic deployment.
 One of the killing feature of the SFC platform is the capability to classify
 traffic based on its typology. In fact, this make the system able to redirect
 traffic load on the more appropriate chain of network function and, if needed,
-to change the treatment during SFC traverse. Nevertheless, eveb in the final
+to change the treatment during SFC traverse. Nevertheless, even in the final
 implementation we does not take into account the development of a fully featured
 classifier because it is outer of the scope of this project, although the
 latter element is considered in the overall system functioning but is
@@ -328,7 +328,7 @@ When packets are sent from a sender $S$, to a receiver $R$, in this scenario,
 they start travelling to the network and reach the our system, where traffic can
 be classified and redirect to the appropriate SFC to be handled. During this
 elaboration, it is important to maintain transparency (making the sender unaware
-of what is happing in the middle of the transmission) and to keep all the
+of what is happening in the middle of the transmission) and to keep all the
 information of the original packet (headers included) for better classification.
 To achieve this two main possibilities can be used TUN/TAP tunneling or
 encapsulation packets such as IP in IP or TCP over TCP.
@@ -390,7 +390,7 @@ failure may cause to an unaware client to believe that all the packets have
 reached the destination. TCP session recreation seems burdensome and it doesn't
 seem to add any significant benefit at the first sight, but it offers the
 flexibility to perform extensive packet manipulation and use different TCP
-flavors hence increasing preed in heterogeneous networks.
+flavors hence increasing performance in heterogeneous networks.
 
 \vspace*{1cm}
 
@@ -456,11 +456,11 @@ the opposite of this field. The \texttt{Context Header} is decomposed in:
 \end{description}
 The first 4 fields are necessary to make the solution independent to carry along
 the chain information about endpoints. IPv4 representation is used but
-improvements and use of variable length centext header can enhance the
+improvements and use of variable length context header can enhance the
 solution allowing both IPv4 and IPv6 address representation. The 
 \texttt{Direction} bit instead is used to make components of the chain aware of
 the direction on which the SFC is traversed. This field is not strictly
-necessary but allow to retrieve this information whitout retrieving it checking
+necessary but allow to retrieve this information without retrieving it checking
 actually which is the previous link that has managed a given packet. 
 
 Finally, before delivering the packet to the first element of the chain the
@@ -560,7 +560,7 @@ this kind of sockets does not allow to read even the TCP/UDP-IP headers of the
 incoming packets. In a mirrored way, \egresses{} open same type of sockets to
 communicate with the destination, so neither in this case it is possible to read
 headers. To preserve them we implemented a workaround in form of a Python script
-that recrate original header that must be put between the sender/receiver and
+that recreate original header that must be put between the sender/receiver and
 the \ingress{}/\egresses{}, that works as a proxy that add to the payload of the
 original message even the header recreated. This script was developed both for
 UDP and TCP protocols.
@@ -578,7 +578,30 @@ they are only needed due to our implementation.
 
 \subsection{Astaire}
 The component that enable the communication with VNF and the creation of chains
-is \astaire{}. This component work as SFF
+is \astaire{}\footnote{\url{https://github.com/Augugrumi/Astaire}}. This
+component, developed in C++, implement the SFF in the traditional architecture
+overview. As mentioned before, communications among \ingresses{}/\egresses{}
+and VNFs and among virtual functions each other are implemented using UDP
+protocol. This choice was made due to the fact that UDP is lightweight and in
+general faster than TCP, event thanks to the smaller header. 
+
+\astaire{} main tasks are to receive and forward packets and it is implemented
+as a SFF that manage a unique VNF. Since we suppose that all the VNF that our
+system manage are SFC unaware we incorporated the NSH handling and SFC proxy
+functionality in this element. To deal with SFC aware only modification required
+is to not remove this encapsulation. Basically once a packet is received it
+remove the NSH encapsulation and send it to the associated virtual function. In
+this implementation we suppose that \astaire{} is able to reach a VNF as a
+simple method call or invoking a C++ or Java program whose path is passed to 
+\astaire{} as argument during launch. The VNF must be able to manage an array of
+bytes that represent the packet that is traversing the chain, to which is
+removed the NSH (so headers and payload of the original packet, eventually
+modified from previous virtual functions). Call to VNF is totally decoupled
+to forwarding mechanism, so it could be expanded allowing the possibility to
+call a function in terms of sending a packet and waiting for the response. When
+the VNF has finished to treat the packet, based on the NSH removed before,
+calculate the next step of to which forward traffic and the new header. 
+
 
 \subsection{Chain management}
 
