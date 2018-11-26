@@ -639,8 +639,8 @@ allow the management of incoming and outgoing traffic without \ingresses{} and
 \egresses{}. This component is only a prototype of a fully featured orchestrator
 even regarding VIM handling. In fact, due to time contraint the communication
 with Kubernetes APIs is implemented only on a basic level, allowing only some
-operation. It is implemented in Java using Spark to expose a REST API with with is
-possible to handle SFCs. Despite other components of this implementation 
+operation. It is implemented in Java using Spark to expose a REST API with which
+is possible to handle SFCs. Despite other components of this implementation 
 \harbor{} is not deployed on Kubernetes.
 
 \harbor{} handle both VNF and SFC catalogs: it is possible to get the list of
@@ -721,6 +721,9 @@ instance are running. At this stage it is not developed to provide data on Pods
 faults or misbehaviours. Furthermore, not scalability features are implemented
 yet.
 
+Finally, this architectural component has the task to set the description of
+running chains on \roulette{}.
+
 Since \harbor{} is the MANO has to instantiate the SFCs routes that 
 \ingresses{}, \egresses{} and \astaire{} instances can use. 
 
@@ -734,8 +737,41 @@ Definition of the VNFs allows to define the ReplicaSet (since they are YAML
 file used by Kubernete) but a future release of this component must provide
 the possibility to define roules to autoscale. Kubernetes enable this
 opportunity taking advantage of \texttt{autoscaling/v2beta2} API
-version\footnote{\sloppy
-\url{https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/#autoscaling-on-multiple-metrics-and-custom-metrics}},
+version\footnote{\sloppy\url{https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough}},
 in which the set of Pods can be increased/decreased basing on specified metrics.
 
-\roulette{}, that has 
+\roulette{}, that has to keep track of chain endpoints (the pair $<\ingress{},
+\egress{}>$) of a communication and the SFCs instances deployed, is a
+centralized element of the platform, as it is used and implemented in this final
+review. It was thought as element on which the blocks of the final proposal have
+to most frequently perform reads than writes, but increasing the number of
+connection that exploit the chain this implementation can be not enough and a
+distributed and more scalable approach have to be used. An alternative solution
+is to divide it into two different element: one that gives to endpoints and to 
+\astaire{} instances information on the chain and one that take care of pairing
+ingresses and egresses. The former components will be written only by the MANO.
+The latter piece of information can, instead, be added to a variable length NSH.
+Exploiting this possibility the platform will have a lighter backend and the
+pair $<\ingress{}, \egresses{}>$ will be added directly from this components to
+the header and forwarded by \astaire{}. 
+
+\texttt{Ingresses} and \egresses{} implementation problems lay on the socket
+handling. Low level socket must be used in a future implementation, making
+endpoint able to read headers and to be performance enhancement proxies. Another
+improvement is to better support end-to-end communication between sender and
+receiver. If sender (or the receiver) disconnects from the corrispondant
+endpoint it is transparent to the counterpart. The same happens in case of
+packet loss. Mechainism to manage these scenarios must be develop (as, in
+general, proxies are used).
+
+The communication inside the patform take advantage of the lightweight UDP
+protocol approach but does not internal mechanisms of packet recovery. It could
+be useful to implement some sort of local retransmission in case of packet loss
+to avoid to give this responsability to the external sources.
+
+Finally, \astaire{} is implemented as an SFF that take care of only one VNF. It
+descrease complexity of component but it implies that one \astaire{} instance
+must run for each VNF instance. Moreover our solution is only a simple
+implementation and we do not tested it under a large traffic load, where right
+connection handling has a critical role.
+
