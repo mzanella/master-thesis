@@ -1,4 +1,4 @@
-\chapter{SFC Implementation}
+\chapter{Service Function Chain Implementation}
 \label{chap:impl}
 
 \newcommand{\enchainer}{\texttt{Enchainer}}
@@ -358,8 +358,11 @@ of the platform.
 
 After the second review we performed a complete change in terms of
 implementation and technologies used. We redesigned the possible solution based
-on the problems that we found on the first and the second reviews. The final
-proposal is composed mainly by $4$ components:
+on the problems that we found on the first and the second reviews. First two
+reviews were \emph{unidirectional} implementation, since traffic where able
+only to traverse the system from sender to the receiver, this implementation
+instead allows \emph{bidirectional} traffic. The approved proposal is composed
+mainly by $4$ components:
 \begin{itemize}
   \item \astaire{}
   \item \harbor{}
@@ -381,7 +384,7 @@ implemented only as a mock component: based on the protocol type used on
 transport layer used to transmit traffic to the SFC edge, it gives back a
 chain identifier. The protocol supported are only TCP and UDP.
 
-\subsection{Packet transmission strategies}
+\subsection{Overlay routing}
 When packets are sent from a sender $S$, to a receiver $R$, in this scenario,
 they start travelling to the network and reach the our system, where traffic can
 be classified and redirect to the appropriate SFC to be handled. During this
@@ -465,10 +468,13 @@ packets easily and make more secure the communication. Encapsulating packets
 give us a more flexible approach and we decided to utilize it even if it does
 not allow us to keep header information in a simple manner. Both for TCP and for
 UDP external connection, the communication among links in the chain uses UDP
-protocol: it is an unreliable protocol but it is lightweight and allow a faster
-packet transmission compared to TCP.
+protocol. We choose this protocol because it removes some of the TCP overhead:
+UDP does not implement any form of congestion avoidance mechanisms and it does
+not create a connection among sender and receiver so generally it has a lower
+latency. On the other hand i it is unreliable and congestion scenarios are not
+managed.
 
-\subsection{Ingresses end egresses}
+\subsection{Ingresses and egresses}
 In both of the previous implementation there was a component that handle the
 traffic before it traverse the chain. In this final solution we developed 
 \ironhide{}\footnote{\url{https://github.com/Augugrumi/ironhide}}. This
@@ -537,7 +543,8 @@ sender communication parameters, with the final receiver. Delivering the final
 packet it establish a connection and, as in the \ingress{}, this information is
 saved into a map. 
 
-\subsection{Roulette}
+\subsection{Roulette: Context Information Policies and Chain Definition
+provider}
 In bidirectional communication, that involves a continuous interaction between a
 sender and a receiver, it is needed to not only keep the connection alive
 between sender/receiver and \ingress{}/\egress{} but even to make possible to
@@ -634,7 +641,7 @@ instead does not requires too much modification and communication between
 shows that proxies are not necessary components of the solution proposed but
 they are only needed due to our implementation.
 
-\subsection{Astaire}
+\subsection{Astaire: a Service Function Forwarder implementation}
 The component that enable the communication with VNF and the creation of chains
 is \astaire{}\footnote{\url{https://github.com/Augugrumi/Astaire}}. This
 component, developed in C++, implement the SFF in the traditional architecture
@@ -688,7 +695,7 @@ cycles: as a matter of fact that either the \texttt{TTL} field will goes to $0$
 and the packet will be discarded or the \texttt{SPI} will no more point to an
 element of the chain and traffic will be redirected to an \egress{}.
 
-\subsection{Chain management and orchestration}
+\subsection{Harbor: Chain Manager and Orchestrator}
 To handle chains and virtual functions we developed
 \harbor{}\footnote{\url{https://github.com/Augugrumi/harbor/}}. This component
 work as the MANO of our platform. We developed \harbor{} in a manner that it
