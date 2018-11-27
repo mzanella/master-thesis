@@ -1,12 +1,14 @@
 \chapter{Background}
 \label{chap:background}
+In the following chapter are discussed the technologies that make possible the
+definition of the Fifth Generation of Mobile Network (5G). Virtualization of
+resources and Software Defined Networking allow to move network functions from
+physical devices to a virtualized environment and to compose them, leading to
+the concept of Service Function Chaining.
 
-In this chapter we are going to explain the most important concepts of the 
-upcoming 5G standard, talking about the Virtual Network Functions (VNFs) and 
-how first experiments with this new technology already begun. Finally we are 
-going to briefly introduce and explain the technologies involved and their role.
+\section{Network Function Virtualization}
 
-\section{Virtualization}
+\subsection{Virtualization}
 Cloud computing is nowadays one of the cutting edge Internet technologies, and
 it is possible thanks to virtualization, that allows to isolate applications,
 optimizing the utilization of hardware resources and providing more flexibility.
@@ -41,6 +43,142 @@ multiple sites, using private and secure tunnels, relying on the public network
 such as Internet. Other examples of network virtualization are \emph{overlay
   networks}. They are logical networks, build on the top of an existing physical
 network, typically implemented at the application layer.
+
+\subsection{Virtualization of network functions}
+The \emph{Network Function Virtualization} (NFV) concept refers to the use of
+virtualization technologies to virtualize network nodes functions. This emerging
+technology focuses on the decoupling of function logic and hardware, allowing
+VNFs to run on the top of servers, switches, storage devices or on cloud
+computing infrastructures. In other words the software logic is separated from
+the custom platform on which it runs, enabling the use of commodity
+hardware~\cite{gray2016network}. That approach worked well in the past, because
+of the need to follow rigorous standards, providing at the same time high
+quality, but it led to long product cycles and high specialized services that
+use a combination of software and hardware resources, typically vendor-specific,
+and only largely non-interoperable within other vendor solutions. New Internet
+scenarios, that include IoT and the increasing number of services to spread
+multimedia data (Skype, Netflix, Spotify, \dots), requires more flexible
+functions and faster network deployments. This detachment provides greater
+flexibility to scale VNF based on traffic and performance and also improve the
+automation of function deploy and update: removing dedicated hardware also will
+reduce costs machines and for maintenance.
+
+The NFV technology is exploited in a framework, organized
+at least by three components~\cite{etsi2013gs}, as represented in
+Figure~\ref{chap:background:img:etsi_arch}:
+\begin{enumerate}
+  \item a software, able to run on over the NFVI, that performs the network
+  function that must be deployed, that is the VNF;
+  \item NFV Infrastructure (NFVI) that is composed by all physical resources
+  and how these can be virtualized, that forms the environment where the VNFs
+  are deployed;
+  \item NFV MANagement and Orchestration (NFV-MANO) that covers the
+  orchestration and management of both physical and logical resources, the
+  functional blocks, data repositories used by these blocks, reference points
+  and interfaces through which these functional blocks exchange
+  information for the purpose of managing and orchestrating NFVI and VNFs.
+\end{enumerate}
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=2]{etsi_arch}
+  \caption[Network Function Virtualization reference architecture]{Network
+    Function Virtualization reference architecture~\cite{etsi2013gs}}
+  \label{chap:background:img:etsi_arch}
+\end{figure}
+
+\subsection{Network Function Virtualized Infrastructure}
+As mentioned before, NFVI is the combination of physical and logical resources,
+that combined together create the environment on which the VNFs are deployed
+and run. Physical supplies can be proprietary systems, commercial-off-the-shelf
+hardware, software and network resources or cloud computing capabilities. The
+abstraction of resources is made taking advantage of a virtualization layer,
+that hides the underlying infrastructure. Storage and computing resources may
+be represented in terms of virtual machines or
+containers~\cite{mijumbi2016network}.
+
+\subsection{NFV MANagement and Orchestration}
+The MANO, represented in Figure~\ref{chap:background:img:etsimano}, can be
+splitted into three logical functional components:
+\begin{itemize}
+  \item the virtual infrastructure manager (VIM);
+  \item the VNF Manager (VNFM);
+  \item the NFV Orchestrator (NFVO).
+\end{itemize}
+And into four data repositories:
+\begin{itemize}
+  \item Network Service (NS) catalog;
+  \item VNF catalog;
+  \item NFV instances;
+  \item NFVI resources.
+\end{itemize}
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.3]{etsimano}
+  \caption{NFV MANO components}
+  \label{chap:background:img:etsimano}
+\end{figure}
+
+
+\paragraph*{VIM}
+The VIM aim is to manage and control NFVI resources. Every MANO can contain more
+VIM instances, each of them control NFVI resources from a single infrastructure.
+VIM can be developed either to administer one type of NFVI or more. VIM have to
+monitor the allocation of virtual resource in order to orchestrate allocation,
+upgrade, release, and reclamation of resources and optimize their usage,
+including virtual links, networks, subnets, and ports. It is also the component
+in charge to manage security group policies to ensure access control. In
+addition, VIM also has to record data on performance and faults, that can be
+queried. Thank to this component it is possible to dynamically allocate
+resource, based on demand, that is particularly using IaaS.
+
+\paragraph*{VNFM} 
+In this framework all VNFs, once created, have to register to a VNFM. This
+component is accountable to manage their lifecycle, that consists of
+instantiation, scaling, termination and, possibly, update/upgrade, and
+communicate the state of a certain VNF to others MANO blocks: this enable the
+monitoring of key performance indicators (KPI), that can help to make decision
+on VNF scaling. VNFM can manage a single type of VNF instances or multiple.
+
+\paragraph*{NFVO}
+The NFVO is responsible of combining functions to create end-to-end services.
+Its functionalities are to ensure there are adequate compute, storage, and
+network resources available to provide a network service independently of the
+VIM and the creation of end-to-end services by composing different VNFs, that
+can be deployed on different point-of-presence and registered to different VNF.
+It also managing the topology of these services. 
+
+\paragraph*{Data repositories} Data repositories are use to keep information on
+the NFV MANO. The NS catalog is a set of predefined templates, which define
+services, functions involved and their connectivity. The VNF catalog is,
+instead, a set of templates describing the deployment and characteristics of
+VNFs. The NFVI resources repository holds information about available/allocated
+NFVI resources. The NFV instances repository keep information about functions
+and services instances during their lifetimes.
+
+\subsection{VNF challenges}
+This new concept open a plethora of challenges~\cite{han2015network}. Regarding
+performance, functions running on general purposes servers cloud affect
+throughput and latency, moreover the capacity of the virtualized function can be
+less than the hardware and software version. To reach comparable levels in terms
+of performance efficient algorithms are needed, as a excellent resource
+management. Another problems is the VNF management. In case of hardware
+functions resources are almost equivalent, at the contrary, virtualized ones
+could have costs and values that differs significantly depending on the point of
+presence on which are deployed. On the other hand, since VNFs are software
+components, they can elastically scale up and down, depending on the traffic
+loads and user demand. Another management challenge refers to keeping track
+where the VNF is running, that is of paramount importance in case of issues.
+Related to possible dysfunctions, software function must reach a certain level
+of reliability. Generally, purpose-build network equipment can ensure the
+five-nines reliability requirement, that is more challenging to follow in that
+scenario due to the higher number of possible points of failure, such as during
+the scaling operation or VNF migrating from a point of presence to another.
+Finally even security must be taken into account. In fact, infrastructure on
+which VNFs run can be outsourced to third parties. Furthermore, orchestration
+and management components must implement some sort of intrusion prevention and
+detection system and the sharing of resources can introduce security threads.
 
 \section{Software-defined networking}
 The SDN is an emerging approach to cloud computing and networking technology
@@ -188,143 +326,6 @@ containing both physical and logical resources, that involve all physical
 assets and resources for computation, storage or transport, including radio
 access.
 
-
-\section{Network Function Virtualization}
-The \emph{Network Function Virtualization} (NFV) concept refers to the use of
-virtualization technologies to virtualize network nodes functions. This emerging
-technology focuses on the decoupling of function logic and hardware, allowing
-VNFs to run on the top of servers, switches, storage devices or on cloud
-computing infrastructures. In other words the software logic is separated from
-the custom platform on which it runs, enabling the use of commodity
-hardware~\cite{gray2016network}. That approach worked well in the past, because
-of the need to follow rigorous standards, providing at the same time high
-quality, but it led to long product cycles and high specialized services that
-use a combination of software and hardware resources, typically vendor-specific,
-and only largely non-interoperable within other vendor solutions. New Internet
-scenarios, that include IoT and the increasing number of services to spread
-multimedia data (Skype, Netflix, Spotify, \dots), requires more flexible
-functions and faster network deployments. This detachment provides greater
-flexibility to scale VNF based on traffic and performance and also improve the
-automation of function deploy and update: removing dedicated hardware also will
-reduce costs machines and for maintenance.
-
-The NFV technology is exploited in a framework, organized
-at least by three components~\cite{etsi2013gs}, as represented in
-Figure~\ref{chap:background:img:etsi_arch}:
-\begin{enumerate}
-  \item a software, able to run on over the NFVI, that performs the network
-  function that must be deployed, that is the VNF;
-  \item NFV Infrastructure (NFVI) that is composed by all physical resources
-  and how these can be virtualized, that forms the environment where the VNFs
-  are deployed;
-  \item NFV MANagement and Orchestration (NFV-MANO) that covers the
-  orchestration and management of both physical and logical resources, the
-  functional blocks, data repositories used by these blocks, reference points
-  and interfaces through which these functional blocks exchange
-  information for the purpose of managing and orchestrating NFVI and VNFs.
-\end{enumerate}
-
-\begin{figure}
-  \centering
-  \includegraphics[scale=2]{etsi_arch}
-  \caption[Network Function Virtualization reference architecture]{Network
-    Function Virtualization reference architecture~\cite{etsi2013gs}}
-  \label{chap:background:img:etsi_arch}
-\end{figure}
-
-\subsection{Network Function Virtualized Infrastructure}
-As mentioned before, NFVI is the combination of physical and logical resources,
-that combined together create the environment on which the VNFs are deployed
-and run. Physical supplies can be proprietary systems, commercial-off-the-shelf
-hardware, software and network resources or cloud computing capabilities. The
-abstraction of resources is made taking advantage of a virtualization layer,
-that hides the underlying infrastructure. Storage and computing resources may
-be represented in terms of virtual machines or
-containers~\cite{mijumbi2016network}.
-
-\subsection{NFV MANagement and Orchestration}
-The MANO, represented in Figure~\ref{chap:background:img:etsimano}, can be
-splitted into three logical functional components:
-\begin{itemize}
-  \item the virtual infrastructure manager (VIM);
-  \item the VNF Manager (VNFM);
-  \item the NFV Orchestrator (NFVO).
-\end{itemize}
-And into four data repositories:
-\begin{itemize}
-  \item Network Service (NS) catalog;
-  \item VNF catalog;
-  \item NFV instances;
-  \item NFVI resources.
-\end{itemize}
-
-\begin{figure}
-  \centering
-  \includegraphics[scale=0.3]{etsimano}
-  \caption{NFV MANO components}
-  \label{chap:background:img:etsimano}
-\end{figure}
-
-
-\paragraph*{VIM}
-The VIM aim is to manage and control NFVI resources. Every MANO can contain more
-VIM instances, each of them control NFVI resources from a single infrastructure.
-VIM can be developed either to administer one type of NFVI or more. VIM have to
-monitor the allocation of virtual resource in order to orchestrate allocation,
-upgrade, release, and reclamation of resources and optimize their usage,
-including virtual links, networks, subnets, and ports. It is also the component
-in charge to manage security group policies to ensure access control. In
-addition, VIM also has to record data on performance and faults, that can be
-queried. Thank to this component it is possible to dynamically allocate
-resource, based on demand, that is particularly using IaaS.
-
-\paragraph*{VNFM} 
-In this framework all VNFs, once created, have to register to a VNFM. This
-component is accountable to manage their lifecycle, that consists of
-instantiation, scaling, termination and, possibly, update/upgrade, and
-communicate the state of a certain VNF to others MANO blocks: this enable the
-monitoring of key performance indicators (KPI), that can help to make decision
-on VNF scaling. VNFM can manage a single type of VNF instances or multiple.
-
-\paragraph*{NFVO}
-The NFVO is responsible of combining functions to create end-to-end services.
-Its functionalities are to ensure there are adequate compute, storage, and
-network resources available to provide a network service independently of the
-VIM and the creation of end-to-end services by composing different VNFs, that
-can be deployed on different point-of-presence and registered to different VNF.
-It also managing the topology of these services. 
-
-\paragraph*{Data repositories} Data repositories are use to keep information on
-the NFV MANO. The NS catalog is a set of predefined templates, which define
-services, functions involved and their connectivity. The VNF catalog is,
-instead, a set of templates describing the deployment and characteristics of
-VNFs. The NFVI resources repository holds information about available/allocated
-NFVI resources. The NFV instances repository keep information about functions
-and services instances during their lifetimes.
-
-\subsection{VNF challenges}
-This new concept open a plethora of challenges~\cite{han2015network}. Regarding
-performance, functions running on general purposes servers cloud affect
-throughput and latency, moreover the capacity of the virtualized function can be
-less than the hardware and software version. To reach comparable levels in terms
-of performance efficient algorithms are needed, as a excellent resource
-management. Another problems is the VNF management. In case of hardware
-functions resources are almost equivalent, at the contrary, virtualized ones
-could have costs and values that differs significantly depending on the point of
-presence on which are deployed. On the other hand, since VNFs are software
-components, they can elastically scale up and down, depending on the traffic
-loads and user demand. Another management challenge refers to keeping track
-where the VNF is running, that is of paramount importance in case of issues.
-Related to possible dysfunctions, software function must reach a certain level
-of reliability. Generally, purpose-build network equipment can ensure the
-five-nines reliability requirement, that is more challenging to follow in that
-scenario due to the higher number of possible points of failure, such as during
-the scaling operation or VNF migrating from a point of presence to another.
-Finally even security must be taken into account. In fact, infrastructure on
-which VNFs run can be outsourced to third parties. Furthermore, orchestration
-and management components must implement some sort of intrusion prevention and
-detection system and the sharing of resources can introduce security threads.
-
 \section{Service Function Chaining}
 \begin{figure}
   \centering
@@ -361,7 +362,7 @@ treatment based on its typology. The classification can occur on different point
 of the chain and can be updated during the packet delivery. Finally creation,
 modification and deletion of a certain SFC must not impact on the others.
 
-\subsection{Graph view of an SFC}
+\subsection{Service Function Forwarder and Service Function Path}
 An SFC can be seen as a graph in which each node is an SF and edges are the path
 through which a packet have to pass through. Because of this definitions there
 are no limitations on possible cycles that can occur in the chain, in case that
@@ -391,6 +392,15 @@ from \texttt{SF0} to \texttt{SF2}. On the contrary, a bidirectional SFC allows
 traffic in both directions. So, having the same chain as in the previous
 example, traffic can pass both from \texttt{SF0} to \texttt{SF2} and from
 \texttt{SF2} to \texttt{SF0}.
+
+\subsection{Classification of traffic}
+In order to define the path of which traffic have to be forwarded, it must be
+classified. The classification granularity is not specified and can occur even
+during the SFC traverse. At the ingress of SFC environment packets have to be
+classified to determine to choose an SFC and eventually, if the classification
+granularity is too coarse, can be repeated after the treatment of some SFs. The
+reclassification, also called branching, may result in a different SFP choice or
+only to a metadata change.
 
 \subsection{SFC Encapsulation}
 In order to exchange packet and information in the SFC ecosystem, traffic is
@@ -522,16 +532,6 @@ Figure~\ref{chap:background:img:nshtype2variable}
   \item[Type:] indicates the type of metadata, depending on the MD Class;
 \end{description}
 
-
-\subsection{Classification of traffic}
-In order to define the path of which traffic have to be forwarded, it must be
-classified. The classification granularity is not specified and can occur even
-during the SFC traverse. At the ingress of SFC environment packets have to be
-classified to determine to choose an SFC and eventually, if the classification
-granularity is too coarse, can be repeated after the treatment of some SFs. The
-reclassification, also called branching, may result in a different SFP choice or
-only to a metadata change.
-
 \subsection{Other considerations}
 In this architecture the SFs are viewed are resource and managed by the control
 plane. Capabilities, availability and location are all accountable to the
@@ -544,82 +544,11 @@ metadata and information on the path that it must traverse. It is possible that
 the size of the packet, in this manner, exceed the MTU on some link in the
 chain. Solution must take in account this problem and the cost to overcome it.
 
-\section{5G}
-The Next Generation Mobile Network (NGMN) alliance defined in the 5G
-white paper~\cite{alliance20155g} the
-requirements and the architecture of the new telecommunications standard. 
-This change in communication system is pushed by the increasing mobile network
-connectivity and it expected to be released in 2020~\cite{iwamura2015ngmn}. This
-new standard is supported by some of the major players in mobile connectivity 
-(as Bell, Telecom, Vodafone). Main goals are to provide better end-to-end
-connectivity, increasing communication speed, lower communication latency and
-the support of new scenarios emerged in the past few years, as IoT and
-machine-to-machine communication, high user mobility or ultra-reliable
-communications (e.g. for E-Health Service). Moreover, this new standard define
-requirements even for other uses cases, such as provide connectivity in case of
-natural disasters. 
-
-\subsection{Comparison with LTE}
-5G technology define some improvements compared to Long Term Evolution (LTE)
-technology. Firstly, data rate per user will be 10 times higher from the 100Mb/s
-on average, instead data rate per cell will be 100 times higher. Even the
-end-to-end latency will be enhance, decreasing it from the actual 50ms in the
-region of 10 times. To support high mobility uses cases there will be an
-increase int terms of 1.5\% on the supported speed of nodes, from the 350km/h.
-Finally, the number of users per square kilometer will increase of 100 times
-from the 2000 supported by the LTE cells. Some of the requirements will be
-satisfied working on the radio frequencies communication layer. Larger radio
-spectrum bands, higher frequencies and better forms of channel access (both in
-terms of hardware and in terms of how it is used) will help to enhance the
-performance. Another important change is the time required to deploy the
-services,
-from 90 hours to 90 minutes~\cite{networld20202014role}.
-
-\subsection{Architecture}
-\begin{figure}[t]
-  \centering
-  \includegraphics[scale=0.55]{5garchitecture}
-  \caption[5G Architecture]{5G Architecture~\cite{alliance20155g}}
-  \label{chap:background:img:5garchitecture}
-\end{figure}
-
-The 5G architecture is decomposed in three layers~\cite{alliance20155g}:
-\begin{description}
-\item [Infrastructure resource layer:] represent the physical resources of the
-network, including access nodes, could nodes (e.g. used for storage), devices
-that support the new standard, networking nodes and exposes all these resources
-to upper layers through virtualization;
-
-\item [Business enablement layer:] library of function required by a network as
-modular building block ans set of configuration parameters for certain parts.
-Software can be retrieved from repositories and the function implemented can be
-orchestrated and monitor using APIs;
-
-\item[Business application layer:] applications and services that utilize the 5G
-platform.
-\end{description}
-
-Those layers are articulated by an orchestration entity that manage the
-virtualized network end-to-end and it is accountable to translate application
-layer requirements into services and network slices, finally mapping them into
-infrastructure resources.
-
-\subsection{Enablers}
-As the improvement into the physical connectivity, there are some other enablers
-that will make the requirements of 5G standard satisfiable. Virtualization will
-allow to remove dedicated hardware that are deployed on the network and open
-the possibility to developed other technologies as virtual network functions,
-software defined network and network slicing. The latter make possible to 5G
-system to handle resource in a manner to ensure specific QoS and SLA, based on
-required latency, security and reliability, exploiting the control plane.
-Moreover, even virtualization helps to reach those quality levels, providing
-auto-scaling capabilities.
-
-\section{VIBeS project}
-This work is part of a wider project called VIBeS (Virtualized network functions
-Implementation for Broadband Satellite networks)~\cite{vibesesa}. The sake of
-the project is to develop a architecture and an implementation to optimize the
-service IP-based, where the communication path include a satellite
+\section{A real life example: VIBeS project}
+This work is inspired by a wider project called VIBeS (Virtualized network
+functions Implementation for Broadband Satellite networks)~\cite{vibesesa}. The
+sake of the project is to develop a architecture and an implementation to
+optimize the service IP-based, where the communication path include a satellite
 communication, with a 5G compliant solution. The project have to redesign
 Performance Enhancing Proxy (PEP) agents, to make them suitable to be
 implemented as virtual functions. 
@@ -642,8 +571,9 @@ semantic is broken into multiple connections.
 The final NFV-PEP environment that will be created must be as flexible as
 possible, allowing large-scale distributed deployment and the
 management and orchestration of the function have to follow the ETSI MANO
-architecture. The final solution will follow the architecture depicted in~
-\ref{chap:background:img:vibesarch}.
+architecture and the PEP implemented have to rely on the composition of
+network function concept to create a Service Function Chain. The final solution
+will follow the architecture depicted in~\ref{chap:background:img:vibesarch}.
 
 \begin{figure}[h]
   \centering
