@@ -19,7 +19,56 @@ proposed for the SFC system. Also the experimental implementation that allow us
 to reach the final solution are discussed and why they where abandoned.
 
 \section{Kubernetes Pods and our implementation}
-\todo{Describing pods}
+All components that are presented and we developed are thought to be run inside
+Docker containers. This approach allowed us to be independent on the platform on
+which they will be deployed and to execute them on
+Kubernetes\footnote{\url{https://kubernetes.io/docs/concepts/workloads/pods/pod/}}.
+Pods are group of one or more containers and the specification on how to run
+them, that share storage and network resources. Containers belonging to the same
+Pod are co-located and co-scheduled. They also share the same context and they
+communicate each other via \texttt{localhost} or using Inter Process
+Communication (IPC), at the contrary containers in different Pods will have
+different IPs and can communicate via IPC only with a dedicated configuration
+that we do not take into account. This element are designed to deploy one or
+more applications that are tightly coupled and in a virtual machine or in a
+physical environment will run in the same host, providing an high level
+abstraction allowing transparent horizontal scaling. In our proposals Pods are
+created using Kubernetes
+Deployments\footnote{\url{https://kubernetes.io/docs/concepts/workloads/controllers/deployment/}}:
+they are controller to deploy and update Pods. Deployments, at the contrary to
+ReplicaSets, support \texttt{rolling-update} Kubernetes functionality, meaning
+that Pods definition and configuration can be updated on the fly as well as
+rollback if Deployment state is not stable. 
+
+\begin{lstlisting}[caption={Example of Deployment definition},
+                   captionpos=b, language=yaml, label=chap:impl:lst:deployment]
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: kinks
+        image: nginx:1.15.4
+        ports:
+        - containerPort: 80
+\end{lstlisting}
+In~\ref{chap:impl:lst:deployment} there is an example of Kubernetes Deployment
+for a replica of three Pods running Nginx\footnote{\url{https://www.nginx.com/}}
+and all of them are reachable on port $80$. All these Pods are labelled with
+\texttt{app: nginx}: labels allow to select only a specified subset of Pods,
+for instance to be exposed by Services.
 
 \section{How to reach virtual functions}
 The first issue to overcome in our implementation was how to make possible to
@@ -29,8 +78,9 @@ to create a flexible and scalable solution. In fact, decoupling Pods to physical
 machine let our proposal to be independent on the underlying infrastructure: the
 addition or the removal of hosts would be transparent for the code developed,
 demanding to Kubernetes the task of manage the change in computational and
-storage resources. Kubernetes services \todo{add reference} allowed us to
-overcome the problem. \todo{add Kubernetes services explanation}
+storage resources. Kubernetes
+services\footnote{\url{https://kubernetes.io/docs/concepts/services-networking/service/}}
+allowed us to overcome the problem.
 
 \subsection{Kubernetes Services}
 A Kubernetes service is an abstraction that defines a set of Pods and policies
@@ -216,7 +266,7 @@ suitable in some context such as transfer of heavy files.
 \section{Second review}
 \begin{figure}
   \centering
-  \includegraphics[scale=0.2]{secondreview}
+  \includegraphics[width=\textwidth]{secondreview}
   \caption{Second review schema}
   \label{chap:impl:img:secondreview}
 \end{figure}
@@ -298,6 +348,14 @@ seems to be not suitable for large traffic loads and it could be the bottleneck
 of the platform.
 
 \section{Final proposal}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{finalreview}
+  \caption{Final review schema}
+  \label{chap:impl:img:finalreview}
+\end{figure}
+
 After the second review we performed a complete change in terms of
 implementation and technologies used. We redesigned the possible solution based
 on the problems that we found on the first and the second reviews. The final
@@ -626,18 +684,18 @@ loss.
 The new NSH that \astaire{} will add to the packet to send will have the field
 \texttt{Time To Live} decremented by one and the field \texttt{Service Path
 Identifier} increased by one. This mechanism also prevent the creation of
-cycles: as a metter of fact that either the \texttt{TTl} field will goes to $0$
+cycles: as a matter of fact that either the \texttt{TTL} field will goes to $0$
 and the packet will be discarded or the \texttt{SPI} will no more point to an
 element of the chain and traffic will be redirected to an \egress{}.
 
-\subsection{Chain management}
+\subsection{Chain management and orchestration}
 To handle chains and virtual functions we developed
 \harbor{}\footnote{\url{https://github.com/Augugrumi/harbor/}}. This component
 work as the MANO of our platform. We developed \harbor{} in a manner that it
 is not possible to deploy single VNFs. This because the single VNF does not
 allow the management of incoming and outgoing traffic without \ingresses{} and
 \egresses{}. This component is only a prototype of a fully featured orchestrator
-even regarding VIM handling. In fact, due to time contraint the communication
+even regarding VIM handling. In fact, due to time constraint the communication
 with Kubernetes APIs is implemented only on a basic level, allowing only some
 operation. It is implemented in Java using Spark to expose a REST API with which
 is possible to handle SFCs. Despite other components of this implementation 
@@ -714,11 +772,11 @@ order of the functions in the chain.
 \end{lstlisting}
 
 Once a definition of a chain is updated, this transformation is reflected to
-running intances of the SFC (if any) to make the system more flexibile.
+running instances of the SFC (if any) to make the system more flexible.
 Monitoring functionalities implemented are really limited: \harbor{} can only
 provide information if a certain SFC is running and if components of that SFC
 instance are running. At this stage it is not developed to provide data on Pods
-faults or misbehaviours. Furthermore, not scalability features are implemented
+faults or misbehavior. Furthermore, not scalability features are implemented
 yet.
 
 Finally, this architectural component has the task to set the description of
@@ -730,12 +788,12 @@ Since \harbor{} is the MANO has to instantiate the SFCs routes that
 \section{Implementation problems}
 This final solution has still some issues both due to how we implemented the
 whole system and time constraints. \harbor{} is only an experimental
-implementation: as stated before a fully fuctional MANO must be able to provide
+implementation: as stated before a fully functional MANO must be able to provide
 more information on running SFCs and VNFs. In addition, the possibility to
 manual scaling element of a running chain can improve even more this component.
 Definition of the VNFs allows to define the ReplicaSet (since they are YAML
-file used by Kubernete) but a future release of this component must provide
-the possibility to define roules to autoscale. Kubernetes enable this
+file used by Kubernetes) but a future release of this component must provide
+the possibility to define rules to autoscale. Kubernetes enable this
 opportunity taking advantage of \texttt{autoscaling/v2beta2} API
 version\footnote{\sloppy\url{https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough}},
 in which the set of Pods can be increased/decreased basing on specified metrics.
@@ -759,18 +817,18 @@ the header and forwarded by \astaire{}.
 handling. Low level socket must be used in a future implementation, making
 endpoint able to read headers and to be performance enhancement proxies. Another
 improvement is to better support end-to-end communication between sender and
-receiver. If sender (or the receiver) disconnects from the corrispondant
+receiver. If sender (or the receiver) disconnects from the corresponding
 endpoint it is transparent to the counterpart. The same happens in case of
-packet loss. Mechainism to manage these scenarios must be develop (as, in
+packet loss. Mechanism to manage these scenarios must be develop (as, in
 general, proxies are used).
 
-The communication inside the patform take advantage of the lightweight UDP
+The communication inside the platform take advantage of the lightweight UDP
 protocol approach but does not internal mechanisms of packet recovery. It could
 be useful to implement some sort of local retransmission in case of packet loss
-to avoid to give this responsability to the external sources.
+to avoid to give this responsibility to the external sources.
 
 Finally, \astaire{} is implemented as an SFF that take care of only one VNF. It
-descrease complexity of component but it implies that one \astaire{} instance
+decrease complexity of component but it implies that one \astaire{} instance
 must run for each VNF instance. Moreover our solution is only a simple
 implementation and we do not tested it under a large traffic load, where right
 connection handling has a critical role.
