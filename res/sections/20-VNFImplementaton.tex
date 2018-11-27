@@ -82,7 +82,7 @@ storage resources. Kubernetes
 services\footnote{\url{https://kubernetes.io/docs/concepts/services-networking/service/}}
 allowed us to overcome the problem.
 
-\subsection{Kubernetes Services}
+\subsection{Kubernetes Services} \label{chap:impl:subsec:services}
 A Kubernetes service is an abstraction that defines a set of Pods and policies
 to access them. Pods referenced by a certain Service are usually selected with a
 \emph{Label Selector}. In general these labels, added to Pod specifications,
@@ -707,10 +707,10 @@ Moreover, since it is an orchestrator it allows to launch a new SFC instance
 from a previous saved definition and to stop a running chain instance.
 
 An example of VNFs and SFC that can be deployed using \harbor{} and our platform
-is showed below. In~\ref{chap:impl:lst:vnfexample}. As explained in \todo{add
-reference to service} all the function that will run on Kubernetes are exposed
-using a Service, decoupling the use of a certain function to the way it can be
-called.
+is showed below. In~\ref{chap:impl:lst:vnfexample}. As explained 
+in~\ref{chap:impl:subsec:services} all the function that will run on Kubernetes
+are exposed using a Service, decoupling the use of a certain function to the way
+it can be called.
 \begin{lstlisting}[caption={Example of VNF definition}, captionpos=b,
                    language=yaml, label=chap:impl:lst:vnfexample]
 kind: Deployment
