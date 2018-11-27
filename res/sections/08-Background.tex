@@ -383,7 +383,6 @@ be: it can specify the exact locations, identifying both the SFF and the SF, or
 only give some recommendation or, for example, defining only the SFF and
 demanding to it the decision on the SF instance.
 
-
 The graph representation also permit to think to \emph{unidirectional} and
 \emph{bidirectional} chains. An SFC is defined unidirectional if traffic can
 traverse it only in one direction, so if it is composed by 3 SF, named
@@ -401,6 +400,11 @@ classified to determine to choose an SFC and eventually, if the classification
 granularity is too coarse, can be repeated after the treatment of some SFs. The
 reclassification, also called branching, may result in a different SFP choice or
 only to a metadata change.
+
+As a concrete example, this choice might represent a possible use of different
+transport protocols according to the application. The classification may base
+its decision on the link estimation function, user input, static rules or
+by configurations coming from the orchestration layer.
 
 \subsection{SFC Encapsulation}
 In order to exchange packet and information in the SFC ecosystem, traffic is
