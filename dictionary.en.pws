@@ -379,3 +379,7 @@ QUIC
 RabbitMQ
 DNSMasq
 decapsulates
+lifecycles
+DaemonSet
+hostname
+subsubsection
