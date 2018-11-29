@@ -19,7 +19,7 @@ proposed for the SFC system. Also the experimental implementation that allow us
 to reach the final solution are discussed and why they where abandoned.
 
 \section{Kubernetes Pods and our implementation}
-All components of the SFC that are presented and we developed are thought to be
+All components of the SFC that are presented and we developed are thought to
 run inside Docker containers. This approach allowed us to be independent on the
 platform on which they will be deployed and to execute them on
 Kubernetes\footnote{\url{https://kubernetes.io/docs/concepts/workloads/pods/pod/}}.
@@ -29,7 +29,7 @@ Pod are co-located and co-scheduled. They also share the same context and they
 communicate each other via \texttt{localhost} or using Inter Process
 Communication (IPC), at the contrary containers in different Pods will have
 different IPs and can communicate via IPC only with a dedicated configuration
-that we do not take into account. This element are designed to deploy one or
+that we do not take into account. This element is designed to deploy one or
 more applications that are tightly coupled and in a virtual machine or in a
 physical environment will run in the same host, providing an high level
 abstraction allowing transparent horizontal scaling. In our proposals Pods are
@@ -356,7 +356,7 @@ of the platform.
   \label{chap:impl:img:finalreview}
 \end{figure}
 
-After the second review we performed a complete change in terms of
+After the second review, we performed a complete change in terms of
 implementation and technologies used. We redesigned the possible solution based
 on the problems that we found on the first and the second reviews. First two
 reviews were \emph{unidirectional} implementation, since traffic where able
@@ -377,7 +377,7 @@ One of the killing feature of the SFC platform is the capability to classify
 traffic based on its typology. In fact, this make the system able to redirect
 traffic load on the more appropriate chain of network function and, if needed,
 to change the treatment during SFC traverse. Nevertheless, even in the final
-implementation we does not take into account the development of a fully featured
+implementation we do not take into account the development of a fully featured
 classifier because it is outer of the scope of this project, although the
 latter element is considered in the overall system functioning but is
 implemented only as a mock component: based on the protocol type used on
@@ -471,7 +471,7 @@ UDP external connection, the communication among links in the chain uses UDP
 protocol. We choose this protocol because it removes some of the TCP overhead:
 UDP does not implement any form of congestion avoidance mechanisms and it does
 not create a connection among sender and receiver so generally it has a lower
-latency. On the other hand i it is unreliable and congestion scenarios are not
+latency. On the other hand it is unreliable and congestion scenarios are not
 managed.
 
 \subsection{Ingresses and egresses: endpoints of the chain}
