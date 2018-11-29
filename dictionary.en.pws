@@ -377,9 +377,10 @@ retransmission
 misbehaviour
 QUIC
 RabbitMQ
-DNSMasq
 decapsulates
 lifecycles
 DaemonSet
 hostname
 subsubsection
+Dnsmasq
+DHCP
