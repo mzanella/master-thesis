@@ -5,10 +5,9 @@ In the following chapter are reported some research work related on topics
 covered in this thesis. 
 
 \section{Related work on NFV}
-In the market it is possible to find different research and implementations in
-different scenarios.
+In the market it is possible to find different research and implementations on Network Function Virtualization and its management.
 
-An example is the one described in~\cite{nogales2018nfv}in
+An example is the one described in~\cite{nogales2018nfv} in
 which the ETSI MANO architecture is proposed on the top a network of drones.
 This open a wide range of possibilities, allowing to provide connectivity even
 in areas where there are not an infrastructure or it is momentarily not
@@ -31,12 +30,12 @@ the possibility of deployment on less powerful devices and putting them on
 network edge open a wide range of opportunities to classify packets and treat
 them in an adequate manner as soon as possible. Another paper that propose the
 use of containers for VNF is~\cite{hoang2018extended}, in which function are
-deployed both on Openstack and in Kubernetes as VIMs, using TOSCA definition to
-describe containers and Tacker for the management as network function
-orchestrator, even if they does not provide an evaluation of the solution.
-Another aspect to consider is that they not mention the possibility to composed
-their function. Finally, as author stated, standard does not support fully
-features for container by now.
+deployed both on Openstack and on Kubernetes exploited as VIMs, using TOSCA
+definition to describe containers and Tacker for the management as network
+function orchestrator, even if they does not provide an evaluation of the
+solution. Another aspect to consider is that they not mention the possibility to
+composed their function. Finally, as author stated, standard does not support
+fully features for container by now.
 
 
 \section{Related work on network slicing}
@@ -62,12 +61,12 @@ in wired context, cannot be applied in wireless counterpart.
 \section{Related work on SFCs}
 
 Since the SFC technology was proposed many work came out proposing different
-implementation solutions came out~\cite{medhat2017service}. In this part there
-is an overview of some of them.
+implementation~\cite{medhat2017service}. In this part there is an overview of
+some of them.
 
 The work~\cite{GhaznaviSAB16} proposed an optimization model to calculate the
 optimal location of VNFs based on different metrics such as bandwidth, load
-balancing and routes. This decomposes the SFC on performance requirements
+balancing and routes. This decomposes the SFC on performance requirements,
 eliminating the throughput bound of a chain to a single VNF or a single physical
 machine. Mathematical models developed was tested in a simulation environment. A
 critical enhancement to this work could be to test algorithm in a real
@@ -114,16 +113,16 @@ delivery. Using containers the instantiation of virtual functions should employ
 less time.
 
 A relevant work on function chaining in network is~\cite{trajkovska2017sdn}. In
-this work author efforts are concentrated on joining SDN and VNF technologies to
-create SFCs. They developed an SDN-driven SDK, a virtual traffic classifier to
-analyze traffic in real-time and decide the optimal chain for it and a VNF
+this work authors' efforts are concentrated on joining SDN and VNF technologies
+to create SFCs. They developed an SDN-driven SDK, a virtual traffic classifier
+to analyze traffic in real-time and decide the optimal chain for it and a VNF
 specialized on video transdecoding, used event to evaluate the performances of
 the whole system. Chaining is performed exploiting layer 2 connectivity, using
 OpenvSwitch as virtual network switches an OpenDayLight in order to route the
 traffic on a set of policies. However the solution does not provide any
 mechanism to perform an automatic deployment of chains and services: this can be
 an issue in particular in case of VNF fault. Orchestration and some mechanisms
-of fault tolerance are critical in particular in a real environment, enabling
+of fault tolerance are critical in a real environment, as enabling
 autoscaling on user demand or traffic load. Automated deployment also make
 possible the recreation of a virtual machine in case of fault. As a matter of
 fact that a virtual function can fail depending on an erroneous load balancing
@@ -132,19 +131,20 @@ interrupt end-to-end communication to bring up the VNF as soon as possible. This
 recreation process can be slow due to the usage of VMs to deploy the functions,
 that could take minutes to startup.
 
-The paper~\cite{kriti2017dnfc} introduce the possibility using container in SFC
-deployment. The chain of container is created exploiting Openflow to create flow
-to route traffic to the containers, that have to be installed on the host
+The paper~\cite{kriti2017dnfc} introduce the possibility of using container in
+SFC deployment. The chain of container is created exploiting Openflow to create
+flows to route traffic to the containers, that have to be installed on the host
 machine. This work however does present any form of management or orchestration
 of the chain, neither an automatic deployment. Moreover it requires installation
 of part of the system on the host machine: in this way there is not a fully
 virtualized environment. The former issue has some implication: the VNF has a
 strong relation on the host on which is running and the system could not be
-simply be moved from one machine to another as it could be done only using
-containers. Finally this paper does not provide any form of system evaluation
-neither in terms of performances nor in terms of resilience. Fault recovering
-and autoscaling could be achieved only improving the system introducing other
-technologies, such as Docker Compose, Kubernetes or Docker Swarm.
+simply be moved from one machine to another as it could be using a fully
+container-based approach. Finally this paper does not provide any form of system
+evaluation neither in terms of performances nor in terms of resilience. Fault
+recovering and autoscaling could be achieved only improving the system
+introducing other technologies, such as Docker Compose, Kubernetes or Docker
+Swarm.
 
 To the best of our knowledge, all general purposes solutions rely on virtual
 machines, lowering system performance due to overhead caused by hypervisor-based

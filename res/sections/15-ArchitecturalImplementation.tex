@@ -17,15 +17,15 @@ In Figure~\ref{chap:archimpl:img:architecture} is depicted the overall
 architecture of the expected implementation. All components communicate each
 other thanks to RabbitMQ and the system is orchestrated by Openbaton. Unlike the
 ETSI NFV framework the technologies involved are defined, and this was the
-system proposal to which we started. The low-level orchestration handle
+system proposal to which we started. The low-level orchestration handles
 repositories for VNFs and SFCs definitions, monitoring and service deployment.
 
 The higher level, instead, instructs the lower one through the APIs that it
 exposes, configuring and managing services. 
 
 We study this architectural proposal and the technologies proposed but we had
-some troubles with some components. In fact, we choose to deploy our platform on
-Kubernetes but we were not able to make Openbaton and this container
+some troubles with some of the components. In fact, we choose to deploy our
+platform on Kubernetes but we were not able to make Openbaton and this container
 orchestrator work together.
 
 Openbaton has a plugin structure that allows developer to integrate new
@@ -50,7 +50,7 @@ component deployed in a Openbaton-like manner.
   \label{chap:archimple:sec:secondattempt:img:attempt2v1harbor}
 \end{figure}
 
-To describe SFC \texttt{Harbor} uses a JSON definition, for VNF instead it
+To describe SFC \texttt{Harbor} uses a JSON definition, for VNF, instead, it
 requires a YAML definition, as the one used by Kubernetes. 
 
 Thanks to the APIs, it is possible to integrate our system with Openbaton: in
