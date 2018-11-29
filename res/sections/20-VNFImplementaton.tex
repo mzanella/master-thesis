@@ -19,9 +19,9 @@ proposed for the SFC system. Also the experimental implementation that allow us
 to reach the final solution are discussed and why they where abandoned.
 
 \section{Kubernetes Pods and our implementation}
-All components that are presented and we developed are thought to be run inside
-Docker containers. This approach allowed us to be independent on the platform on
-which they will be deployed and to execute them on
+All components of the SFC that are presented and we developed are thought to be
+run inside Docker containers. This approach allowed us to be independent on the
+platform on which they will be deployed and to execute them on
 Kubernetes\footnote{\url{https://kubernetes.io/docs/concepts/workloads/pods/pod/}}.
 Pods are group of one or more containers and the specification on how to run
 them, that share storage and network resources. Containers belonging to the same
@@ -475,6 +475,7 @@ latency. On the other hand i it is unreliable and congestion scenarios are not
 managed.
 
 \subsection{Ingresses and egresses: endpoints of the chain}
+\label{chap:impl:subsec:endpoints}
 In both of the previous implementation there was a component that handle the
 traffic before it traverse the chain. In this final solution we developed 
 \ironhide{}\footnote{\url{https://github.com/Augugrumi/ironhide}}. This
@@ -697,6 +698,27 @@ Identifier} increased by one. This mechanism also prevent the creation of
 cycles: as a matter of fact that either the \texttt{TTL} field will goes to $0$
 and the packet will be discarded or the \texttt{SPI} will no more point to an
 element of the chain and traffic will be redirected to an \egress{}.
+
+\begin{figure}
+  \centering \includegraphics[scale=0.38]{ingress_seq_diagram}
+  \caption[Sequence diagram - Incoming traffic management]{In the diagram is
+  shown how the system work when a packet arrive from a new end user. 
+  \texttt{Ingress} manage packet classification and encapsulation and forward
+  it to the first element of the chain, after registering on \roulette{}. 
+  \astaire{} goal instead is to manage communication and provide the packet to
+  the SFC unaware function \texttt{VNF0}.}
+  \label{chap:impl:img:ingrdiagram}
+\end{figure}
+
+\begin{figure}
+  \centering \includegraphics[scale=0.38]{egress_seq_diagram}
+  \caption[Sequence diagram - Outgoing traffic management]{In the diagram is
+  shown how the system work when a packet has to be delivered to destination.
+  \texttt{Egress} register itself on \roulette{}. After it decapsulates the
+  packet and deliver it to destination. The (eventual) response of the
+  destination is classified, encapsulated and sent to the right chain.}
+  \label{chap:impl:img:egrdiagram}
+\end{figure}
 
 \subsection{Harbor: Chain Manager and Orchestrator}
 To handle chains and virtual functions we developed
