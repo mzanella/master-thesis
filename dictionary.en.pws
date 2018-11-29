@@ -376,3 +376,6 @@ autoscale
 retransmission
 misbehaviour
 QUIC
+RabbitMQ
+DNSMasq
+decapsulates
