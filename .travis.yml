@@ -25,3 +25,10 @@ after_failure:
 - cat Thesis.log
 before_deploy:
 - git fetch --tags
+deploy:
+  provider: releases
+  api_key:
+    secure: P4SvsNDRCGOwiQ5+LZYmSIxft7YtST5QVqQYZOnHcnHljTbXILuqnNOGuH3sYTDq9FF3qdkeVcMelYBG7j6RAN8sDzEi/Mztddnwk+In8lrhr+YKo5a/Fk3A7TABXNWoYQcZqdkcaQw92NXgNi+yA/WhdJ3S1WhYg1uj6H7J5PksM9Qz11jWjXNxBHffIyQwHArezEzvzH/riPbVQa/hPOqeyNFOKnHhGCEx6af7BlRdWkAe8BD/xn650o1JzWbrloGjoswveJUSG+KJgu8HZM6v3s6oj0xj/lmAvuIccB7FFjkPe/r++B5Tu9py+cxTNwQ0s6s8+r6PtrMWONqbDKC8q7Q3czxBw4upYhl5MnCiGrjO6O+cm5OkstzkOal5qvshFgDhosMSflbEp7/Z9gNHIesHfEEz17HfAFfstSROLn/p7OPPFdNZBbKKUUaqthmyv8MBzJdhk5d5Ve55H2x50uM0UdeKa5Q3dX+n4ziUjHzYXV/BoDrOMF5W9GcDWd4HZAQN0+/6o9JuUfZBOW9lkdY3+6Z6aBcG2if5UB6PeSygHyMx6+4ds0T3D/v7yMsLLO7MPvcPG0viPMo9RAZdIDh/JNQbOiakz1KDz7ILWRLb00HzGrPBhxuL9+T0VWeRR/iaVO9QlSXZ2OgSY3QiN33mVSk4LUSGAo2UZKA=
+  file: Thesis.pdf
+  on:
+    repo: mzanella/master-thesis
