@@ -553,6 +553,34 @@ chain. Solution must take in account this problem and the cost to overcome it.
 Service Function and Virtual Network Function are different terminologies that
 refers to the same component~\cite{medhat2017service}.
 
+\subsection{Use cases}
+SFC technology can be used in several scenarios changing the composition of the
+chain, depending on the context in which it will be used.
+
+A use case in which this technology can be exploited is massive IoT. Suppose we
+have a huge amount of sensor that have to transmit data across the network.
+Usually this kind of devices uses UDP to deliver information and this
+operation could be expensive, since transmission cost could depend on the amount
+of data to send. A rudimentary solution can be to use a simple SFC composed by
+two VNF. The first one can be a \emph{VNF-Aggregator}, a function whose aim is
+to buffering data, eventually elaborate it (to send it as aggregate data) and a
+\emph{VNF-Optimizer} that perform connection optimization. Deploying this
+solution can help to create a cost effective solution: the aggregation of data
+reduce the amount of data to deliver, the \emph{VNF-Optimizer} can split the
+communication, using TCP instead of UDP protocol and using different techniques
+to enhance the communication, as header compression or use different TCP
+flavors based on the connection with the receiver.
+
+Another example in which SFC technology can help to develop an effective
+solution is video streaming. To deliver this kind of service it can be used a
+chain composed by a \emph{VNF-transcoder} and a \emph{VNF-Adaptive-Bitrate}. The
+high definition video can be transmitted from the source and the former VNF
+can change the video encoding to a lighter one. Instead, the
+\emph{VNF-Adaptive-Bitrate} can apply the \emph{MPEG-DASH} adaptive bitrate
+streaming standard to provide the content in a variety of different bitrates and
+the DASH client will select the most suitable one based on its network
+conditions.
+
 \section{A real life example: VIBeS project}
 This work is inspired by a wider project called VIBeS (Virtualized network
 functions Implementation for Broadband Satellite networks)~\cite{vibesesa}. The
