@@ -14,23 +14,23 @@
 \newcommand{\egress}{\texttt{egress}}
 \newcommand{\egresses}{\texttt{egresses}}
 
-In this chapter there is described the implementation of the solution that we
-proposed for the SFC system. Also the experimental implementation that allow us
-to reach the final solution are discussed and why they where abandoned.
+In this chapter is described the implementation of the solution that we
+proposed for the SFC system. Also the experimental proposal that allow us
+to reach the final solution are discussed as well as why they where abandoned.
 
 \section{Kubernetes Pods and our implementation}
 All components of the SFC that are presented and we developed are thought to
 run inside Docker containers. This approach allowed us to be independent on the
 platform on which they will be deployed and to execute them on
 Kubernetes\footnote{\url{https://kubernetes.io/docs/concepts/workloads/pods/pod/}}.
-Pods are group of one or more containers and the specification on how to run
-them, that share storage and network resources. Containers belonging to the same
-Pod are co-located and co-scheduled. They also share the same context and they
-communicate each other via \texttt{localhost} or using Inter Process
+Pods are group of one or more containers that share storage and network
+resources and the specification on how to run them. Containers belonging to the
+same Pod are co-located and co-scheduled. They also share the same context and
+they communicate each other via \texttt{localhost} or using Inter Process
 Communication (IPC), at the contrary containers in different Pods will have
 different IPs and can communicate via IPC only with a dedicated configuration
-that we do not take into account. This element is designed to deploy one or
-more applications that are tightly coupled and in a virtual machine or in a
+(that we do not take into account). This element is designed to deploy one or
+more applications tightly coupled, that in a virtual machine or in a
 physical environment will run in the same host, providing an high level
 abstraction allowing transparent horizontal scaling. In our proposals Pods are
 created using Kubernetes
@@ -38,7 +38,7 @@ Deployments\footnote{\url{https://kubernetes.io/docs/concepts/workloads/controll
 they are controller to deploy and update Pods. Deployments, at the contrary to
 ReplicaSets, support \texttt{rolling-update} Kubernetes functionality, meaning
 that Pods definition and configuration can be updated on the fly as well as
-rollback if Deployment state is not stable. 
+rollback are possible if Deployment state is not stable. 
 
 \begin{lstlisting}[caption={Example of Deployment definition},
                    captionpos=b, language=yaml, label=chap:impl:lst:deployment]
@@ -74,10 +74,10 @@ for instance to be exposed by Services.
 The first issue to overcome in our implementation was how to make possible to
 reach Pods inside Kubernetes without specifying the IP of the machine on the top
 of which they are running. In fact, enabling that possibility would allowed us
-to create a flexible and scalable solution. In fact, decoupling Pods to physical
+to create a flexible and scalable solution. Decoupling Pods to physical
 machine let our proposal to be independent on the underlying infrastructure: the
 addition or the removal of hosts would be transparent for the code developed,
-demanding to Kubernetes the task of manage the change in computational and
+demanding to Kubernetes the task of manage changes in computational and
 storage resources. Kubernetes
 services\footnote{\url{https://kubernetes.io/docs/concepts/services-networking/service/}}
 allowed us to overcome the problem.
@@ -88,10 +88,11 @@ to access them. Pods referenced by a certain Service are usually selected with a
 \emph{Label Selector}. In general these labels, added to Pod specifications,
 does not provide uniqueness but identify a set of objects.
 In the snipped~\ref{chap:impl:lst:srv} there is an example of Service
-definition.The service create will be called \texttt{my-service} and targets TCP
-port 9376 on any Pods labelled with the selector \texttt{app=MyApp}. Kubernetes
-will assign to the Service an IP address (also called \emph{clusterIP}). 
-\texttt{port} filed in the definition is the port on which the Service can be
+definition. The service created will be called \texttt{my-service} and targets
+TCP port 9376 on any Pods labelled with the selector \texttt{app=MyApp}.
+Kubernetes will assign to the Service an IP address (also called 
+\emph{clusterIP}). \texttt{port} field in the definition is the port on which
+the Service can be
 reached, instead \texttt{targetPort} is the port on which traffic will be
 redirected on Pods. It can be either a valid port number or a string that
 identify port name of backend Pods, allowing more flexibility to Pod and Service
@@ -115,12 +116,13 @@ spec:
 \end{lstlisting}
 
 For Service discovery, there were \emph{environment variables} and \emph{DNS}.
-To Pods running on a certain Node \texttt{kubelet} add a set of variables for
-each Services, that can be used for referencing to it. In the former technique,
-to discover services, instead, are used the DNS server cluster add-on. It
-watches Kubernetes API to be aware if new Services are created to add DNS
-records for them. In this way all Pods are able to do Service name resolution
-automatically. Services types can be:
+To Pods running on a certain Node, \texttt{kubelet} (the daemon that is in
+charge to ensure that containers are running and healthy) adds a set of
+variables for each Services, that can be used for referencing to it. In the
+latter technique, to discover services, instead, are used the DNS server cluster
+add-on. It watches Kubernetes API to be aware if new Services are created to add
+DNS records for them. In this way all Pods are able to do Service name
+resolution automatically. Services types can be:
 \begin{description}
 \item[ClusterIP:] to expose services only within the cluster, it is the default
 value;
@@ -133,7 +135,7 @@ load balancer;
 \end{description}
 
 All services that we used belong to \texttt{NodePort} category. This choice was
-made for a twofold reason. First is the sake of simplicity: binding services to
+made for a twofold reason. First for the sake of simplicity: binding services to
 a predefined port is easy to concatenate services and identify them by port.
 \texttt{NodePort} type is not suitable to expose services to the outside world,
 as instead \texttt{ExternalName}. However it requires the registration of a
@@ -166,7 +168,7 @@ schema is described in Figure~ \ref{chap:impl:img:firstreview}. Two components
 were identified: \begin{itemize} \item \enchainer
   \item \vnfs
 \end{itemize}
-The former element represent the first link on each chain. The goal of this
+The former element represents the first link on each chain. The goal of this
 element is to receive packets from the sender and, in a more evolved solution,
 to query the classifier retrieving the SFC composition. After it wraps the
 message into a JSON file, along with the path chain specification:
@@ -181,9 +183,9 @@ instead the \texttt{chain} field is an array of IPs or Kubernetes service names
 that allows to reach VNF. The array even specify VNFs order. The last element
 must be the final destination of the packet. 
 The \vnf{} in this review are seen as two layer application. One layer is
-the ``real'' VNF, so the treatment of the traffic, the other, instead, manage
-the communication in the chain. It must provide the capability to forward
-packets following this schema:
+the ``real'' VNF, so the treatment of the traffic, the other, instead, manages
+the communication in the chain, working as Service Function Forwarder. It must
+provide the capability to forward packets following this schema:
 \begin{enumerate}
   \item once a packet arrives the field \texttt{message} must be read and the
   function represented by the VNF applied;
@@ -191,20 +193,20 @@ packets following this schema:
   possibilities:
   \begin{enumerate}
     \item if array length is greater then $1$ the JSON that wraps the message
-    must be reconstructed because the actual \vnf is not the last
+    must be reconstructed because the actual \vnf{} is not the last
     element of the chain. \texttt{message} field must be set to the result of
     of the function application and the \texttt{chain} field must be updated
     removing the first element of the array;
     \item if array length is equal to $1$, after the application of the
     transformation of the VNF to the value of the \texttt{message} field,
-    message must be delivered to destination, without the JSON wrapping:
-    \item in other case message must be discarded.
+    message must be delivered to destination, without the JSON wrapping;
+    \item otherwise the message must be discarded.
   \end{enumerate}
 \end{enumerate}
 
 \subsection{Implementation}
 This first code implementation was developed in Java\footnote{And available on
-this repository: \\\url{https://github.com/Augugrumi/chaining-functionalities}}
+this repository: \\\url{https://github.com/Augugrumi/chaining-functionalities}}.
 The \enchainer{} component is simply a server implemented using Netty
 library\footnote{\url{https://netty.io/}}. The choice of this framework is due
 the possibility to serve multiple protocols and for its quick and easy usage. 
@@ -236,7 +238,7 @@ the \enchainer{} are specified) and a single Service that exposes the
 \subsubsection*{Multiple Pods}
 Multiple Pods first review follow a different approach. For each \vnf{}
 and for the \enchainer{} is defined a different Deployment and a Service.
-Even if it is more cumbersome to define chain like this it helps to create a
+Even if it is more cumbersome to define chain like this, it helps to create a
 more scalable and flexible solution. In fact, exposing each \vnf{} with a
 Service allows the single \vnf{} to be part of different SFC and to do not
 have static chain created at deployment time. Moreover, handling separately
@@ -245,23 +247,24 @@ the components make possible to increase/decrease the number of single
 
 \subsection{Problems}
 This first attempt has different issues. First \enchainer{} has no
-possibility to retrieve all the original message of a sender: it requires at
+possibility to retrieve the whole original message of a sender: it requires at
 least that even the transport layer headers can be read, but it is not possible
 due to i) server created with Netty works at application layers and ii) Java
-does not allow to create socket at an enough low layer that allow transport
+does not allow to create socket at a layer enough low to allow transport
 layer header reading. To mitigate this and deploy the solution the workaround
-was to add to the payload of the message sent the missing headers. Lower layer
-header allows the classifier (that is not implemented) to know more information
-on the communication, so to perform a better analysis on the treatment to apply
-on the incoming packets. Another problem was the JSON wrapping: it does not
-follow the standard encapsulation defined for this technology. Passing to a
-standard encapsulation was planned, but the JSON one was useful because of the
-format, that can be easy read and write. Further, even the communication among
-VNF works at application level using POST request to sends data and lower layer
-communication can enhance performance. Finally, with this implementation data
-sent from the sender must be fully received to the \enchainer{} before, then
-from each \vnf{} in the chain, making communication slower and making it not
-suitable in some context such as transfer of heavy files.
+was to add to the payload of the message sent the missing information. Lower
+layer header allows the classifier (that is not implemented yet) to know more
+information on the communication, so to perform a better analysis on the
+treatment to apply on the incoming packets. Another problem was the JSON
+wrapping: it does not follow the standard encapsulation defined for this
+technology. Passing to a standard encapsulation was planned, but the JSON one
+was useful because of the format, that can be easy read and write. Further, even
+the communication among VNF works at application level using POST request to
+sends data and lower layer communication can enhance performance. Finally, with
+this implementation data, sent from the sender must be fully received to the 
+\enchainer{} before, then from each \vnf{} in the chain, making communication
+slower and making it not suitable in some context such as transfer of large
+files.
 
 \section{Second review}
 \begin{figure}
@@ -286,10 +289,11 @@ In this second proposal three components are defined:
 \end{itemize}
 \enchainer{} is pretty the same of the first implementation. Even in this case
 the this component must be the first element to be traversed of the chain, that
-wrap the message into a JSON format as in the previous solution and define the
+wrap the message into a JSON format (as in the previous solution) and define the
 list of function that traffic must traverse. \vnfs{}, instead, were revisited.
 During the development of this second implementation we thought that they must
-be decoupled to the mechanism on encapsulation, leaving to \vnf{} only the task
+be decoupled to the mechanism on encapsulation/decapsulation and communicate
+with other elements of the platform, leaving to \vnf{} only the tasks
 to perform the function to transform traffic and to implement basic
 communication functionalities, as receive a packet and give back a response. The
 new element introduced was the \dispatcher{}. It was a centralized component
@@ -298,10 +302,10 @@ the JSON wrapped message from the \enchainer{} and retrieve both
 \texttt{message} and \texttt{chain} fields values. After it sends the former
 value to the first element of the array described from the \texttt{chain} field.
 Following this idea, \vnfs{} does not need to know anything about the JSON
-formatting (\emph{SFC unaware}) but it only to be able to receive packet on a
-certain port, (eventually) modify it and send it back. Basically, the different
-approach compared to the previous implementation depends on the presence of the
-dispatcher that is accountable of the traffic forwarding.
+formatting (\emph{SFC unaware}) but it must only to be able to receive packet on
+a certain port, (eventually) to modify it and to send it back. Basically, the
+different approach compared to the previous implementation depends on the
+presence of the \dispatcher{} that is accountable of the traffic forwarding.
 
 \subsection{Implementation}
 Even this second implementation experiment was developed in Java\footnote{And
@@ -310,11 +314,11 @@ available on this repository: \\
 \enchainer{} implementation basically was not changed. To the \vnf{} component
 was removed the JSON encapsulation code: as in the previous review a hierarchy
 is provided, but this time is only need for a more rapid function development.
-Even this prototype allow to create \vnf{} using different code or programming
-languages, only requirements are:
+Even this prototype allows to create a \vnf{} using different code or
+programming languages, only requirements are:
 \begin{itemize}
-  \item to be able to receive a POST request;
-  \item to be able to modify the payload of the POST request, applying the
+  \item to be able to receive POST requests;
+  \item to be able to modify the payload of a POST request, applying the
   function for which it was created;
   \item to be able to reply to the previous request, sending the modified data.
 \end{itemize}
@@ -323,16 +327,16 @@ Rapidoid library for ingoing and outgoing communications.
 
 \subsection{Kubernetes Deployment}
 Even for this implementation we provide two different deployments, one that
-deploy all the system in a single Pod and the other that exploit the possibility
-to use multiple Pods. The deployments works as before. In the Single Pod one the
-SFC, the \enchainer{} and the \dispatcher{} are specified onto the same
-Deployments and a Service is specified to be able to reach the chain. In the
-Multiple Pods deployment, as before, each component is defined by a different
-Deployment and exposed by a Service.
+deploys all the system in a single Pod and the other that exploits the
+possibility to use multiple Pods. The deployments works as before. In the Single
+Pod one the SFC, the \enchainer{} and the \dispatcher{} are specified onto the
+same Deployments and a Service is specified to be able to reach the
+\enchainer{}. In the Multiple Pods deployment, as previously, each component is
+defined by a different Deployment and exposed by a Service.
 
 \subsection{Problems}
 This second review, since it is based on the code of the previous one, does not
-solve the problems explained before, as the problem regarding application
+solve all the problems explained before, as the problem regarding application
 level communications, the usage of Java as programming language and JSON
 wrapping issues. This solution was developed to study a different topology
 approach, using a centralize element, the \dispatcher{}, that can be the traffic
@@ -340,7 +344,7 @@ orchestrator and can redirect traffic to the \vnfs{}. Also, improving its
 capabilities, it could have more information on transformation that packets must
 pass through and eventually, reclassify the traffic querying the classifier.
 Moreover it provides a total decoupling between SFC platform and network
-function that must be applied. Thus, there is the drawback of the centralized
+functions that must be applied. Thus, there is the drawback of the centralized
 approach. This limit the overall scalability since all function must talk to the
 same component. Exploiting Kubernetes functionalities it is possible to augment
 replicas of the \dispatcher{}, even automatically. Nevertheless, this approach
@@ -362,7 +366,7 @@ on the problems that we found on the first and the second reviews. First two
 reviews were \emph{unidirectional} implementation, since traffic where able
 only to traverse the system from sender to the receiver, this implementation
 instead allows \emph{bidirectional} traffic. The approved proposal is composed
-mainly by $4$ components:
+mainly by four components:
 \begin{itemize}
   \item \astaire{}
   \item \harbor{}
@@ -409,8 +413,8 @@ Interfaces can be created as transient (created and destroyed from the same
 program) or persistent (created by some utility and programs attach to them) and
 once created they are seen as hardware interfaces. In network tunnels created
 using this interfaces it is possible to exchange data in secure way over a
-public network as to transmit packets trough a network even if a certain protocol
-is not supported, thanks to the encapsulation. This encapsulation allow, thus,
+public network as to transmit packets trough a network even if a certain
+protocol is not supported, thanks to the encapsulation that allows, thus,
 to maintain unaltered packets inside the tunnel.
 
 \subsubsection*{Packet encapsulation}
@@ -428,14 +432,15 @@ to maintain unaltered packets inside the tunnel.
 \end{figure}
 IP in IP encapsulation allow to preserve the original packet making it to
 become the payload of a new packet, that can be elaborated and modified
-accordingly, until it gets decapsulated and sent to the receiver eventually.
-When it receives the packet, it is not be aware of the packet elaboration, since
-all the original headers were preserved (or slightly modified). In particular,
-IP in IP allow the packets to pass through intermediate destinations that
-otherwise would not be selected. Split-TCP, instead, ``divide'' the TCP session
-in two parts using proxies: each proxy pretends to be the opposite endpoint in
-each direction. It creates a multi-overlay-hop path where for each hop there is
-an possible independent TCP connection. In order to achieve that, a session
+accordingly, until it gets decapsulated and, eventually, sent to the
+final receiver. When it receives the packet, it is not aware of the packet
+elaboration, since all the original headers were preserved (or slightly
+modified). In particular, IP in IP allow the packets to pass through
+intermediate destinations that otherwise would not be selected. Split-TCP,
+instead, ``divides'' the TCP session into two parts using proxies: each proxy
+pretends to be the opposite endpoint in each direction. It creates a
+multi-overlay-hop path where for each hop there could be an independent TCP
+connection and algorithms. In order to achieve that, a session
 table needs to be established and continuously updated, while TCP headers need
 to be accordingly modified to allow data transmission through the proxies and
 endpoints. Nonetheless, care should be given to packets path: in order to avoid
@@ -446,9 +451,9 @@ case, for example, when an intermediate node sends back a spoofed ACK before the
 original packet is delivered to the real consignee. In this scenario, the
 sender, unaware of the proxy, will miscalculate the sending window based on the
 too low RTT. Other problems of TCP splitting are reliability and security,
-especially because the end to end TCP logic is no longer maintained: a server
+especially because the end-to-end TCP logic is no longer maintained: a server
 failure may cause to an unaware client to believe that all the packets have
-reached the destination. TCP session recreation seems burdensome and it doesn't
+reached the destination. TCP session recreation seems burdensome and it does not
 seem to add any significant benefit at the first sight, but it offers the
 flexibility to perform extensive packet manipulation and use different TCP
 flavors hence increasing performance in heterogeneous networks.
@@ -458,7 +463,7 @@ flavors hence increasing performance in heterogeneous networks.
 \noindent In the final review we tried both the two approaches. The tunnelling
 approach is not suitable for communication among different links of the chain:
 in fact it will create a strong relation among the Pods, nullifying the use of
-Kubernetes services. Moreover, Pods are mortal and if a Pod die in the tunnel,
+Kubernetes services. Moreover, Pods are mortal and if a Pod dies in the tunnel,
 time is required to reconstruct it. Finally creating a tunnel make more
 difficult to update a chain or reclassify a packet during the SFC traverse
 because different tunnel must be created. Also, using a TUN tunnel the
@@ -468,27 +473,29 @@ packets easily and make more secure the communication. Encapsulating packets
 give us a more flexible approach and we decided to utilize it even if it does
 not allow us to keep header information in a simple manner. Both for TCP and for
 UDP external connection, the communication among links in the chain uses UDP
-protocol. We choose this protocol because it removes some of the TCP overhead:
-UDP does not implement any form of congestion avoidance mechanisms and it does
-not create a connection among sender and receiver so generally it has a lower
-latency. On the other hand it is unreliable and congestion scenarios are not
-managed.
+protocol. We choose UDP-encapsulation because this protocol removes some of the
+TCP overhead: it does not implement any form of congestion avoidance mechanisms
+and it does not create a connection among sender and receiver so generally it
+has a lower latency. On the other hand it is unreliable and congestion scenarios
+are not managed.
 
 \subsection{Ingresses and egresses: endpoints of the chain}
 \label{chap:impl:subsec:endpoints}
 In both of the previous implementation there was a component that handle the
 traffic before it traverse the chain. In this final solution we developed 
-\ironhide{}\footnote{\url{https://github.com/Augugrumi/ironhide}}. This
+\ironhide{}\footnote{And available on this repository: 
+\url{https://github.com/Augugrumi/ironhide}}. This
 component is useful not only to manage incoming packets but even the
 communication with the final destination. We called the element of the solution
 that is accountable for the treatment of incoming packets \emph{ingress} and
 similarly the component that handle the communication with the destination is
-called \emph{egress}. \ironhide{} is developed in C++ provide all the
-functionalities to handle incoming packets from the outside of the chain and to
-deliver packet after the SFC treatment. When \ironhide{} works as ingress it
-basically operates as a server that accepts both TCP and UDP packets. Once a
-packet arrives it is forwarded to the classifier, along with the TCP/UDP-IP
-headers, make decision on the SFC to which it must be forwarded.
+called \emph{egress}. Together they are chains \emph{endpoints}. \ironhide{} is
+developed in C++ provide all the functionalities to handle incoming packets from
+the outside of the chain and to deliver packet after the SFC treatment. When 
+\ironhide{} works as \ingress{} it basically operates as a server that accepts
+both TCP and UDP packets. Once a packet arrives it is forwarded to the
+classifier, along with the TCP/UDP-IP headers, that takes decisions on the SFC
+to which it must be forwarded.
 
 The result of the classification is used in the creation of the NSH. During the
 implementation of our solution we only considered the SFC encapsulation with
@@ -519,14 +526,14 @@ the opposite of this field. The \texttt{Context Header} is decomposed in:
   to receive packet;
   \item[Direction (D):] 1-bit chain traversal direction representation.
 \end{description}
-The first 4 fields are necessary to make the solution independent to carry along
-the chain information about endpoints. IPv4 representation is used but
-improvements and use of variable length context header can enhance the
-solution allowing both IPv4 and IPv6 address representation. The 
-\texttt{Direction} bit instead is used to make components of the chain aware of
-the direction on which the SFC is traversed. This field is not strictly
-necessary but allow to retrieve this information without retrieving it checking
-actually which is the previous link that has managed a given packet. 
+The first four fields are necessary to make the solution to carry information on
+packet source and destination throughout the chain traverse. IPv4
+representation is used but improvements and utilizing a variable length context
+header can enhance the solution allowing both IPv4 and IPv6 address
+representation. The \texttt{Direction} bit instead is used to make components of
+the chain aware of the direction on which the SFC is traversed. This field is
+not strictly necessary but allows to retrieve this information without actually
+checking which is the previous link that has managed a given packet. 
 
 Finally, before delivering the packet to the first element of the chain the
 \ingress{} record an entry on a local map to remember the connection with
@@ -534,15 +541,17 @@ the sender of the message. It of paramount important in bidirectional
 communications: in fact the connection with the sender is kept alive to
 subsequently deliver the answer of the receiver. In fact, if the latter sends
 back data to the sender, the \ingress{} is able to deliver it thanks this
-information saved.
+saved information.
 
-\texttt{Egress} component wait for communication from the chain an it is in
+\texttt{Egress} component waits for communication from the chain an it is in
 charge to forward messages to the destination initially specified from the
-sender before the manipulation of the SFC. To accomplish this task is
+sender before the manipulation of the SFC. To accomplish this task it is
 accountable to establish a connection, TCP or UDP depending on the original
-sender communication parameters, with the final receiver. Delivering the final
-packet it establish a connection and, as in the \ingress{}, this information is
-saved into a map. 
+sender communication protocol used, with the final receiver. In a mirrored way
+as the \ingress{}, the \egress{} after establishing the connection with the
+destination, record communication information unto a map. This in useful when
+more than a single packet must be exchange by end-to-end element of the
+connection.
 
 \subsection{Roulette: Context Information Policies and Chain Definition
 provider}
@@ -551,44 +560,49 @@ sender and a receiver, it is needed to not only keep the connection alive
 between sender/receiver and \ingress{}/\egress{} but even to make possible to
 retrieve the \ingress{}/\egress{} in case of a set of replicas of these
 components are deployed.
-
 \begin{exmp}
-Suppose we have a set $I=\{I0, I1, I2\}$ of \ingresses{} and a set $E=\{E0,
-E1\}$ of \egresses{} and suppose that from the sender $S$ packets reach the
-destination $R$ following the path:
-\begin{verbatim}
-S -> I0 -> sfc -> E1 -> R
-\end{verbatim}
-If the response does not reach again the ingress $I0$ but $I2$, the connection
-between $S$ and $I0$ must be aborted and a new connection among $S$ and $I2$
-must be established. The same is whether different \egresses{} are used. This
-semantics requires modification both on sender and on receiver at the
-contrary of using always the same \ingress{} and \egress{} for a given
-connection.
+  Suppose we have a set $I=\{I0, I1, I2\}$ of \ingresses{} and a set $E=\{E0,
+  E1\}$ of \egresses{} and suppose that from the sender $S$ packets reach the
+  destination $R$ following the path:
+  \begin{equation*}
+    \texttt{S} \Longrightarrow \texttt{I0} \Longrightarrow \texttt{sfc}
+    \Longrightarrow \texttt{E1} \Longrightarrow \texttt{R}
+  \end{equation*}
+  If the response does not reach again the \ingress{} $I0$ but, for instance,
+  $I2$, the connection between $S$ and $I0$ must be aborted and a new connection
+  among $S$ and $I2$ must be established. The same is whether different
+  \egresses{} are used. This semantics can require modification both on sender
+  and on receiver, making they to be able to support these disconnections. At
+  the contrary of using always the same \ingress{} and \egress{} for a given
+  connection.
 \end{exmp}
 
-To accomplish this goal we developed \roulette{}. This component orchestrate SFC
-ingresses and egresses in this way: once a new connection is open on a certain 
-\texttt{ingress}, the latter has the task to save on \roulette{} database an
-entry specifying its information (IP), on the communication and on the SFC used.
-Once the packet has traversed the whole chain and reach an \texttt{egress} the
-same entry is updated, adding even the \texttt{egress} information. Thanks to
-this component it is possible to bind a communication to a specified pair 
-\verb!<ingress,egress>!.
+\noindent
+To accomplish this goal we developed \roulette{}\footnote{And available on
+this repository: \url{https://github.com/Augugrumi/roulette}}. This component
+orchestrates SFC ingresses and egresses in this way: once a new connection is
+opened on a certain \texttt{ingress}, the latter has the task to save on 
+\roulette{} database an entry specifying its information (IP) for the
+communication and on the SFC used. Once the packet has traversed the whole chain
+and it reaches an \texttt{egress} the same entry is updated, adding even the 
+\texttt{egress} information. Thanks to this component it is possible to bind a
+communication to a specified pair \verb!<ingress,egress>!.
 
-\roulette{}\footnote{\url{https://github.com/Augugrumi/roulette}} was developed
-in Java using Spark\footnote{\url{http://sparkjava.com/}} to manage requests and
+\roulette{} was developed in Java using
+Spark\footnote{\url{http://sparkjava.com/}} to manage requests and
 connected to a MongoDB\footnote{\url{https://www.mongodb.com/}} database. We
 choose MongoDB as database because it allows to have a flexible data schema,
 useful in particular in a test environment.
 
-\roulette{} sake is not only to manage \ingresses{} and \egresses{} information
-but it also keep the definition of the chains. in fact once a classifier return
-the identifier of the SFC that traffic must traverse, the complete definition
-or the link of the chain in a certain position can be retrieved querying this
-component. SFC definition follow this pattern:
+The sake of this component is not only to manage \ingresses{} and \egresses{}
+information but it keeps also the definitions of the chains. In fact, once a
+classifier returns the identifier of the SFC that traffic must traverse, the
+complete definition or the link of the chain in a certain position can be
+retrieved querying this element of the platform. SFC definition follow this
+pattern:
 
-\begin{lstlisting}[caption={Definition of an SFC}, captionpos=b, language=json]
+\begin{lstlisting}[caption={Definition of an SFC on \roulette{}.}, captionpos=b,
+                   language=json]
 {
   "si" : [
     {
@@ -604,63 +618,69 @@ component. SFC definition follow this pattern:
 }
 \end{lstlisting}
 
-where the \texttt{si} field is an array of objects that identifies a single VNF
-that belong to the chain. it is composed by the field \texttt{url} in which the
-identifier of the service that allow to reach a certain VNF is specified and the
-field \texttt{port} specify the port that must be used to contact the service.
+\noindent
+Where the \texttt{si} field is an array of objects that identifies a single VNF
+that belongs to the chain. It is composed by the field \texttt{url} in which the
+identifier of the Service that allows to reach a certain VNF is specified and
+the field \texttt{port} specifies the port that must be used to contact the
+Service.
 
 We choose to use the same component for both SFC definitions and 
 \ingress{}/\egresses{} pairing only for time constraint. There are not other
-limitation that impose that these two pieces of information must be handled by
+limitations that impose that these two pieces of information must be handled by
 the same component. 
 
 As the chains, \roulette{} is deployed on Kubernetes using a Service to expose
-its functionalities. Use of Kubernetes allows even to have a database replica to
-avoid data loss and high availability of information.
+its functionalities. The usage of Kubernetes allows even to have a database
+replica to avoid data loss and to provide high availability of information.
 
 \subsection{Proxies}
 \texttt{Ingresses} are implemented as a server that allows both TCP and UDP
-connection on a given port. In order to do so are used \verb!SOCK_STREAM! and
-\verb!SOCK_DGRAM! socket respectively. This approach has a drawback: opening
+connection on a given port. In order to do so they use \verb!SOCK_STREAM! and
+\verb!SOCK_DGRAM! sockets respectively. This approach has a drawback: opening
 this kind of sockets does not allow to read even the TCP/UDP-IP headers of the
 incoming packets. In a mirrored way, \egresses{} open same type of sockets to
 communicate with the destination, so neither in this case it is possible to read
-headers. To preserve them we implemented a workaround in form of a Python script
-that recreate original header that must be put between the sender/receiver and
-the \ingress{}/\egresses{}, that works as a proxy that add to the payload of the
-original message even the header recreated. This script was developed both for
-UDP and TCP protocols.
+response headers. To preserve them we implemented a workaround in form of a
+Python script that recreates original header that must be put between the
+sender/receiver and the \ingress{}/\egresses{}, that works as a proxy that add
+to the payload of the original message even the header recreated. This script
+was developed both for UDP and TCP protocols.
 
 The solution can be enhanced removing the proxies exploiting
 \texttt{raw sockets}. Redesigning \ironhide{} to make it able to manage level 2
 communication (Ethernet packets) will make that every packet received will
 be read along with its headers. This approach has a main disadvantage: in TCP
 connections part of the TCP logic must be re-implemented, as TCP-IP header
-creation or ACK handling. For this reason we does not implemented it. UDP
-instead does not requires too much modification and communication between 
+creation or ACK handling. For this reason we does not implemented it. UDP,
+instead, does not requires too much modification and communication between 
 \egress{} and the destination was developed using level 2 sockets: this even
 shows that proxies are not necessary components of the solution proposed but
 they are only needed due to our implementation.
 
 Proxies are even used to redirect traffic directed to the a certain destination
-to the chain.
+to the chain: this work has to be done to the endpoints of the chain to
+completely remove these components.
 
 \subsection{Astaire: a Service Function Forwarder implementation}
-The component that enable the communication with VNF and the creation of chains
-is \astaire{}\footnote{\url{https://github.com/Augugrumi/Astaire}}. This
-component, developed in C++, implement the SFF in the traditional architecture
-overview. As mentioned before, communications among \ingresses{}/\egresses{}
-and VNFs and among virtual functions each other are implemented using UDP
-protocol. This choice was made due to the fact that UDP is lightweight and in
-general faster than TCP, event thanks to the smaller header. 
+The component that enables the communication with VNF and the creation of chains
+is \astaire{}\footnote{And available on this repository:
+\url{https://github.com/Augugrumi/Astaire}}. This element, developed in C++,
+works as the SFF in the standard architecture overview. As mentioned before,
+communications among \ingresses{}/\egresses{} and VNFs and among virtual
+functions each other are implemented using UDP protocol. This choice was made
+due to the fact that UDP is lightweight and in general faster than TCP, event
+thanks to the smaller header. 
 
 \astaire{} main tasks are to receive and forward packets and it is implemented
-as a SFF that manage a unique VNF. Since we suppose that all the VNF that our
-system manage are SFC unaware we incorporated the NSH handling and SFC proxy
-functionality in this element. To deal with SFC aware only modification required
-is to not remove this encapsulation. Basically once a packet is received it
-remove the NSH encapsulation and send it to the associated virtual function. In
-this implementation we suppose that \astaire{} is able to reach a VNF as a
+as an SFF that manages a unique VNF. Since we suppose that all the VNFs that our
+system handles are \emph{SFC unaware} we incorporated the NSH handling and SFC
+proxy functionality in this element. To deal with \emph{SFC aware} ones only
+modification required is to not remove this encapsulation. Basically once a
+packet is received \astaire{} removes the NSH encapsulation and send it to the
+associated
+virtual function. In this implementation we suppose that \astaire{} is able to
+reach a VNF as a
 simple method call or invoking a C++ or Java program whose path is passed to 
 \astaire{} as argument during launch. The VNF must be able to manage an array of
 bytes that represent the packet that is traversing the chain, to which is
@@ -669,7 +689,7 @@ modified from previous virtual functions). Call to VNF is totally decoupled
 to forwarding mechanism, so it could be expanded allowing the possibility to
 call a function in terms of sending a packet and waiting for the response. When
 the VNF has finished to treat the packet, based on the NSH removed before,
-calculate the next step of to which forward traffic and the new header. 
+calculate the next step to which traffic must be forwarded and the new header.
 
 To retrieve the next element \astaire{} reads the \texttt{Service Path
 Identifier} and the \texttt{Service Index} fields of the \texttt{Service Path
@@ -677,20 +697,20 @@ Header}. After it checks in a local map if this values was used yet: in this
 case in the map are saved information (address, port) of the next element.
 Whether this information is not present it have to query \roulette{} to recover
 this data. The \texttt{Service Index} field is incremented before this check. In
-case the instance of \astaire{} is the last link of the SFC roulette will
+case the instance of \astaire{} is the last link of the SFC \roulette{} will
 return:
 \begin{itemize}
   \item the name of the \egress{} service in case that the current packet is the
   first packet that traverse the chain exchanged between a certain pair
-  $<sender,receiver>$; or
-  \item data of the \egress{} used for the actual communication.
+  \verb!<sender,receiver>!; or
+  \item data of the \egress{} used for the current communication.
 \end{itemize}
 Local maps update its information periodically in an automated way: this make
 possible to be responsive to SFC updates or changes on Pods configuration. The
 update period is set to 2 minutes by default but further enhancement must set it
-more accurately. Since Pods are mortal for their nature a system to detect fault
-and update local maps: this will make the overall platform less prone to packet
-loss.
+more accurately. Since Pods are mortal for their nature a system to detect
+Pods faults and update local maps can make the overall platform less prone to
+packet loss.
 
 The new NSH that \astaire{} will add to the packet to send will have the field
 \texttt{Time To Live} decremented by one and the field \texttt{Service Path
@@ -699,47 +719,28 @@ cycles: as a matter of fact that either the \texttt{TTL} field will goes to $0$
 and the packet will be discarded or the \texttt{SPI} will no more point to an
 element of the chain and traffic will be redirected to an \egress{}.
 
-\begin{figure}
-  \centering \includegraphics[scale=0.38]{ingress_seq_diagram}
-  \caption[Sequence diagram - Incoming traffic management]{In the diagram is
-  shown how the system work when a packet arrive from a new end user. 
-  \texttt{Ingress} manage packet classification and encapsulation and forward
-  it to the first element of the chain, after registering on \roulette{}. 
-  \astaire{} goal instead is to manage communication and provide the packet to
-  the SFC unaware function \texttt{VNF0}.}
-  \label{chap:impl:img:ingrdiagram}
-\end{figure}
 
-\begin{figure}
-  \centering \includegraphics[scale=0.38]{egress_seq_diagram}
-  \caption[Sequence diagram - Outgoing traffic management]{In the diagram is
-  shown how the system work when a packet has to be delivered to destination.
-  \texttt{Egress} register itself on \roulette{}. After it decapsulates the
-  packet and deliver it to destination. The (eventual) response of the
-  destination is classified, encapsulated and sent to the right chain.}
-  \label{chap:impl:img:egrdiagram}
-\end{figure}
 
 \subsection{Harbor: Chain Manager and Orchestrator}
 To handle chains and virtual functions we developed
 \harbor{}\footnote{\url{https://github.com/Augugrumi/harbor/}}. This component
-work as the MANO of our platform. We developed \harbor{} in a manner that it
+works as the MANO of our platform. We developed \harbor{} in a manner that it
 is not possible to deploy single VNFs. This because the single VNF does not
 allow the management of incoming and outgoing traffic without \ingresses{} and
 \egresses{}. This component is only a prototype of a fully featured orchestrator
 even regarding VIM handling. In fact, due to time constraint the communication
-with Kubernetes APIs is implemented only on a basic level, allowing only some
-operation. It is implemented in Java using Spark to expose a REST API with which
-is possible to handle SFCs. Despite other components of this implementation 
-\harbor{} is not deployed on Kubernetes.
+with Kubernetes APIs is implemented just at basic level, allowing a limited
+number of operations. It is implemented in Java using Spark to expose a REST API
+with which is possible to handle SFCs. Despite other components of this
+implementation \harbor{} is not deployed on Kubernetes.
 
-\harbor{} handle both VNF and SFC catalogs: it is possible to get the list of
+\harbor{} handles both VNF and SFC catalogs: it is possible to get the list of
 saved definitions, to add and update an existing one and to remove one of them.
 Moreover, since it is an orchestrator it allows to launch a new SFC instance
 from a previous saved definition and to stop a running chain instance.
 
 An example of VNFs and SFC that can be deployed using \harbor{} and our platform
-is showed below. In~\ref{chap:impl:lst:vnfexample}. As explained 
+is showed in~\ref{chap:impl:lst:vnfexample}. As explained 
 in~\ref{chap:impl:subsec:services} all the function that will run on Kubernetes
 are exposed using a Service, decoupling the use of a certain function to the way
 it can be called.
@@ -808,60 +809,79 @@ running instances of the SFC (if any) to make the system more flexible.
 Monitoring functionalities implemented are really limited: \harbor{} can only
 provide information if a certain SFC is running and if components of that SFC
 instance are running. At this stage it is not developed to provide data on Pods
-faults or misbehavior. Furthermore, not scalability features are implemented
+faults or misbehavior. Furthermore, neither scalability features are implemented
 yet.
 
 Finally, this architectural component has the task to set the description of
-running chains on \roulette{}.
+SFCs, in order to make them available to \ingresses{}, \egresses{} and
+\astaire{} instances.
 
-Since \harbor{} is the MANO has to instantiate the SFCs routes that 
-\ingresses{}, \egresses{} and \astaire{} instances can use. 
+\begin{figure}
+  \centering \includegraphics[scale=0.38]{ingress_seq_diagram}
+  \caption[Sequence diagram - Incoming traffic management]{In the diagram is
+  shown how the system works when a packet arrives from a new end-user. 
+  \texttt{Ingress} manages packet classification and encapsulation and forwards
+  it to the first element of the chain, after the registration on \roulette{}. 
+  \astaire{} goal instead is to manage communication and to provide the packet
+  to the SFC unaware function \texttt{VNF0}.}
+  \label{chap:impl:img:ingrdiagram}
+\end{figure}
+
+\begin{figure}
+  \centering \includegraphics[scale=0.38]{egress_seq_diagram}
+  \caption[Sequence diagram - Outgoing traffic management]{In the diagram is
+  shown how the system works when a packet has to be delivered to destination.
+  \texttt{Egress} registers itself on \roulette{}. After it decapsulates the
+  packet and delivers it to destination. The (eventual) response of the
+  destination is classified, encapsulated and sent to the right chain.}
+  \label{chap:impl:img:egrdiagram}
+\end{figure}
+
 
 \section{Implementation problems} \label{chap:impl:sec:problems}
-This final solution has still some issues both due to how we implemented the
+This final approach has still some issues both due to how we implemented the
 whole system and time constraints. \harbor{} is only an experimental
 implementation: as stated before a fully functional MANO must be able to provide
 more information on running SFCs and VNFs. In addition, the possibility to
-manual scaling element of a running chain can improve even more this component.
+manual scaling elements of a running chain can improve even more this component.
 Definition of the VNFs allows to define the ReplicaSet (since they are YAML
-file used by Kubernetes) but a future release of this component must provide
+file used by Kubernetes) but a future release of \harbor{} must provide
 the possibility to define rules to autoscale. Kubernetes enable this
 opportunity taking advantage of \texttt{autoscaling/v2beta2} API
 version\footnote{\sloppy\url{https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough}},
 in which the set of Pods can be increased/decreased basing on specified metrics.
 
-\roulette{}, that has to keep track of chain endpoints (the pair $<\ingress{},
-\egress{}>$) of a communication and the SFCs instances deployed, is a
-centralized element of the platform, as it is used and implemented in this final
-review. It was thought as element on which the blocks of the final proposal have
-to most frequently perform reads than writes, but increasing the number of
-connection that exploit the chain this implementation can be not enough and a
-distributed and more scalable approach have to be used. An alternative solution
-is to divide it into two different element: one that gives to endpoints and to 
-\astaire{} instances information on the chain and one that take care of pairing
-ingresses and egresses. The former components will be written only by the MANO.
-The latter piece of information can, instead, be added to a variable length NSH.
-Exploiting this possibility the platform will have a lighter backend and the
-pair $<\ingress{}, \egresses{}>$ will be added directly from this components to
-the header and forwarded by \astaire{}. 
+\roulette{}, that has to keep track of chain endpoints (the pair 
+\verb!<ingress,egress>!) of a communication and the SFCs definitions, is
+a centralized element of the platform, as it is used and implemented in this
+final review. It was thought as element on which the blocks of the final
+proposal have to most frequently perform reads than writes, but increasing the
+number of connection that exploits the chain this implementation can be not
+enough and a distributed and more scalable approach have to be used. An
+alternative solution is to divide it into two different element: one that gives
+to endpoints and to \astaire{} instances information on the chain and one that
+take care of pairing ingresses and egresses. The former components will be
+written only by the MANO. The latter piece of information can, instead, be added
+to a variable length NSH. Exploiting this possibility the platform will have a
+lighter backend and the pair \verb!<ingress, egresses>! will be added
+directly from this components to the header and forwarded by \astaire{}.
 
 \texttt{Ingresses} and \egresses{} implementation problems lay on the socket
 handling. Low level socket must be used in a future implementation, making
-endpoint able to read headers and to be performance enhancement proxies. Another
-improvement is to better support end-to-end communication between sender and
-receiver. If sender (or the receiver) disconnects from the corresponding
+endpoints able to read headers and to be \emph{performance enhancement proxies}.
+Another improvement is to better support end-to-end communication between sender
+and receiver. If the sender (or the receiver) disconnects from the corresponding
 endpoint it is transparent to the counterpart. The same happens in case of
 packet loss. Mechanism to manage these scenarios must be develop (as, in
-general, proxies are used).
+general, when proxies are used).
 
-The communication inside the platform take advantage of the lightweight UDP
-protocol approach but does not internal mechanisms of packet recovery. It could
-be useful to implement some sort of local retransmission in case of packet loss
-to avoid to give this responsibility to the external sources.
+The communication inside the platform takes advantage of the lightweight UDP
+protocol approach but does not implement internal mechanisms of packet recovery.
+It could be useful to develop some sort of local retransmission in case of
+packet loss to avoid to give this responsibility to the external sources.
 
 Finally, \astaire{} is implemented as an SFF that take care of only one VNF. It
-decrease complexity of component but it implies that one \astaire{} instance
-must run for each VNF instance. Moreover our solution is only a simple
+decreases complexity of the component but it implies that one \astaire{}
+instance must run for each VNF. Moreover our solution is only a simple
 implementation and we do not tested it under a large traffic load, where right
 connection handling has a critical role.
-

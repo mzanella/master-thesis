@@ -31,7 +31,7 @@ orchestrator work together.
 Openbaton has a plugin structure that allows developer to integrate new
 features. We tried to developed an Openbaton VIM driver to allow this MANO to
 deploy functions and chains on Kubernetes, but it requires to manage their
-definitions using TOSCA. This standard language for describe cloud based
+definitions using TOSCA. This standard language for describing cloud based
 services topology focus on hypervisor virtualization and its resource usage.
 This was an issue to our problem in which we have to exploit containers.
 
@@ -50,8 +50,8 @@ component deployed in a Openbaton-like manner.
   \label{chap:archimple:sec:secondattempt:img:attempt2v1harbor}
 \end{figure}
 
-To describe SFC \texttt{Harbor} uses a JSON definition, for VNF, instead, it
-requires a YAML definition, as the one used by Kubernetes. 
+To describe SFC, \texttt{Harbor} uses a JSON definition, for VNF it requires
+instead a YAML definition, as the one used by Kubernetes. 
 
 Thanks to the APIs, it is possible to integrate our system with Openbaton: in
 fact it is possible to create a plugin and map it call to \texttt{Harbor} ones.
