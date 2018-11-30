@@ -2,11 +2,11 @@
 \label{chap:tests}
 
 \section{Test environment}
-All the machine used for testing purposes are Openstack virtual machines, with
+All the machines used for testing purposes are Openstack virtual machines, with
 the following specifications:
 \begin{itemize}
 \item 1 machine with 32GB of RAM, 8vCPU and solid state storage. This host was
-used as final destination of packets;
+used as final destination for packets;
 \item 4 machines with 16GB of RAM, 6vCPU and solid state storage. These VMs
 were utilized to form the Kubernetes cluster, on the top of which the SFC
 infrastructure developed was running;
@@ -16,7 +16,7 @@ was used as client and on which run script to send packets.
 
 \section{RTT measurement}
 Regarding the delivery performance, a metric to take in account is the
-\emph{round trip time}(RTT), that is the time interval between the instant in
+\emph{round trip time} (RTT), that is the time interval between the instant in
 which a packet is sent and when the response is received. To analyze it we
 developed a Python script that sends a packet (with 8B of payload) and waits for
 the correspondent response, recording the instants (expressed as \emph{epoch})
@@ -47,35 +47,38 @@ len. 10             & 0.2135494161      \\ \bottomrule
 \label{chap:tests:sec:rtt:tab:meanrtt}
 \end{table}
 
+\noindent
 Not surprisingly, as depicted in the Table~\ref{chap:tests:sec:rtt:tab:meanrtt},
 the RTT is larger when packets travel through the chain and it increases with
 the total number of elements of the SFC. There is a great difference between
 the mean RTT of the configuration without any chain and the one with an SFC
 with a single link: this outcome has different explanation. As
 described in~\ref{chap:impl:subsec:endpoints} the chain has always at
-least 3 hops (ingress, VNF, egress), so the packet must be elaborated by 3
-different running software. Another interpretation lays into how the code was
-written: components of this framework are not developed for production
+least 3 hops (ingress, VNF, egress), so the packet must be elaborated at least
+by three different running software. Another interpretation lays into how the
+code was written: components of this framework are not developed for production
 purposes, but for a proof of concept, so connections and transmissions can be
 enhanced. Finally, network functions are meant to perform some modifications to
 the packet, so, unavoidably, some time is required for their computation in
-every implementation, even whether more efficient than ours.
+every implementation, even whether is more efficient than ours.
 
 \begin{figure}[H]
   %\centering
     \begin{subfigure}[b]{0.45\textwidth}
         \includegraphics[scale=0.4]{meanrtt}
-        \caption{Mean RTT calculate using SFCs of different lengths}
+        \caption{Mean RTT calculate using SFCs of different lengths.}
         \label{chap:tests:sec:rtt:img:meanstt}
     \end{subfigure}
     ~
     \begin{subfigure}[b]{0.45\textwidth}
         \includegraphics[scale=0.4]{differencenosfc}
-        \caption{Time increase using SFCs of different lengths}
+        \caption{Time increase using SFCs of different lengths.}
         \label{chap:tests:sec:rtt:img:differencertt}
     \end{subfigure}
+    \caption{RTT of SFCs with different lengths.}
 \end{figure}
 
+\noindent
 The results on average RTT are better represented in
 Figure~\ref{chap:tests:sec:rtt:img:meanstt}. In that graph we can easily see
 the difference among the different configurations. Looking at the bars in the
@@ -96,6 +99,7 @@ increase depending on the length of the chain.
   \label{chap:tests:sec:rtt:img:differenceonehop}
 \end{figure}
 
+\noindent
 In Figure~\ref{chap:tests:sec:rtt:img:differenceonehop} is represented the
 difference in terms of average RTT between chains whose lengths differs only by
 one link. The highest value was calculated bringing into comparison the direct
@@ -121,10 +125,11 @@ len. 10   & 0.0073287308    \\ \bottomrule
 \label{chap:tests:sec:rtt:tab:jitter}
 \end{table}
 
+\noindent
 Another metric to take in account is jitter. Jitter is the variation in the
 delay of received packet, and gives a measure of the congestion of the network
 or underline other communication problems.
-Table~\ref{chap:tests:sec:rtt:tab:jitter} represent the jitter calculated for
+Table~\ref{chap:tests:sec:rtt:tab:jitter} represents the jitter calculated for
 different SFC length, derived from values of RTT measured in the previous test.
 As we can see values are really low, indicating no particular problems on the
 network, even if the lowest result is always the one calculated without the
@@ -136,17 +141,15 @@ nodes of our solution are stopped during a transmission. As a matter of fact
 that one of the most important requirements of our implementation is to make
 the system able to recover after an VNF crash. Exploiting Docker container
 technology and Kubernetes platform it is quite straightforward to restart a
-container after a fault. In fact, \texttt{yaml} files that allows to deploy
-containers on Kubernetes, make possible to set pods restart policy to
+container after a fault. In fact, \texttt{YAML} files that allows to deploy
+containers on Kubernetes, make possible to set Pods restart policy to
 ``always'' (the default one), ``on failure'' or ``never'', but the overall
 system must be able to recognize that the VNF is brought up again. 
 
-During this test test we forward 500 packets (1 packet each 50ms) from a sender
-host to a receiver through an SFC of length 3. The \texttt{yaml} file
-describing the chain is reported in~\ref{chap:testyaml}:
-
-The previous configuration can be represented as in
-Figure~\ref{chap:tests:sec:fault:img:testfaultconf}.
+During this test we forward 500 packets (1 packet each 50ms) from a sender
+host to a receiver through an SFC composed by three hops. The \texttt{YAML} file
+describing the chain is reported in Appendix~\ref{chap:testyaml} and can be
+represented as in Figure~\ref{chap:tests:sec:fault:img:testfaultconf}.
 \begin{figure}[H]
   \centering
   \includegraphics[scale=0.4]{testfaultconf}
@@ -154,22 +157,22 @@ Figure~\ref{chap:tests:sec:fault:img:testfaultconf}.
   \label{chap:tests:sec:fault:img:testfaultconf}
 \end{figure}
 
-In that test we bring down the central link of the chain after 5 seconds using
-the command \verb!kubectl delete pods <pod-id> --grace-period=0 --force!, to
-force the stop of a pod and we recorded the time on which packets arrived to
-the receiver and passed through the VNF just before the one that will be make
-stopped.
+\noindent
+In that test we bring down the central link of the chain after $5$ seconds,
+using the command \verb!kubectl delete pods <pod-id> --grace-period=0 --force!,
+to force the stop of a Pod and we record the interval of time on which packets
+does not pass through the chain.
 
 We performed the test using both UDP and TCP protocols, repeating for each
-protocol the measurement 20 times.
+protocol the measurement $20$ times.
 Figure~\ref{chap:tests:sec:fault:img:faultgraphudp} and
 Figure~\ref{chap:tests:sec:fault:img:faultgraphtcp} represent the behavior of
 the system during the experiment: blue points describe packet inter-arrival
-time on the receiver, green once the same metric on the SF that precede the
+time on the receiver, green ones the same metric on the SF that precede the
 central one. The average interval of time in which the
-receiver does not receive anything was 13.5793391228s in case of UDP,
-13.7828050137s in case of TCP. This is a good result, because in about 13s a
-container can crash and can be recreated and be operative again. 
+receiver does not receive anything was $13.5793391228s$ in case of UDP,
+$13.7828050137s$ in case of TCP. This is a good result, because in about $13s$ a
+container can crash, be recreated and be operative again. 
 
 \begin{figure}[]
   %\centering
@@ -190,7 +193,8 @@ container can crash and can be recreated and be operative again.
 \end{figure}
 
 After those results, we repeated the test (this time only using UDP and
-disabling all caching of the DNS of Pods) with the configuration and shown in
+disabling all caching of the DNS requests performed by Dnsmasq on each Pods)
+with the configuration shown in
 Figure~\ref{chap:tests:sec:fault:img:testfaultconfwithreplica}, in order to
 test the system resilience in case of a replica of a certain VNF. We repeated
 this experiment 10 times, bringing down only one of the 2 replica of the same
@@ -205,3 +209,15 @@ specific function can be enough to offer to final user a reliable service.
   \caption{Host logical configuration in case of a replicated SF for testing}
   \label{chap:tests:sec:fault:img:testfaultconfwithreplica}
 \end{figure}
+
+\section{Tests conclusion}
+Tests that we performed, even if they are not exhaustive, indicate that our
+proposal can be a suitable approach in the SFC context.
+The RTT calculated is higher in case during packet delivery SFCs are used
+but it refers to the particular context, in which only a small packet have to
+reach the destination. In other scenarios, with a larger traffic load and
+machine located in different different sites, and exploiting VNFs that does not
+only log the arrival of a packet, SFC can enhance the overall performance,
+compressing data or performing some other optimization. The most important
+result that we reached is to make the system able to recover after a really
+short interval of time.

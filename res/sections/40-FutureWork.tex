@@ -1,26 +1,26 @@
 \chapter{Future work}
 \label{chap:future}
 
-Future implementation of the this proposal can solve problems discussed
+Future implementations of this proposal can solve problems discussed
 in~\ref{chap:impl:sec:problems}. Most of them are issues came out due to how we
 developed our code and due to time constraint. Preserving the semantics of the
 components, more efficient implementations are needed to use this approach in
 a real environment, taking more care of resource usages. Another important
 enhancement is to make \harbor{} able to provide scaling and autoscaling
-capabilities to components deployed in order to exploit all the features given
+capabilities to components deployed, in order to exploit all the features given
 by Kubernetes. Moreover it can be integrated with Openbaton. In fact, during the
 study of the available technologies on the market we focused on this MANO
 implementation. It allows developers to expand the solution with drivers and
-plugins to support different VIM and VNFM (so different VNF) types. Thank to
+plugins to support different VIM and VNFM (so different VNF) types. Thanks to
 \harbor{} APIs it will be possible to develop an Openbaton component whose only
 aim is to call \harbor{} demanding the responsibility to manage a certain
 request. 
 
 \harbor{} can also be enhanced improving the chain update system. At the current
-stage all the running chain is updated immediately, but it can be useful in some
-contexts to adopt a less brutal approach, leaving the communication that make use
-of the old version of the chain to terminate and making new connections to use
-the new definition.
+stage all the running chains are updated immediately, but it can be useful in
+some contexts adopt a less brutal approach can be a better solution, leaving
+the communication that make use of the old version of the chain to terminate
+and making new connections to use the new definition.
 
 Packet transmission protocol used to exchange data inside the platform is UDP.
 It is lighter than TCP but it does not manage packet loss and applications have
@@ -28,21 +28,21 @@ to manage these cases. In the implementation presented there are no mechanism of
 packet recovering that must be implemented. Further other protocol can be use to
 improve performance. For example, in 2012 Google presented QUIC, an UDP-based
 transport layer network protocol that has the aim to improve performances of
-current protocols. 
+current transport layer protocols.
 
-During technologies evaluation we choose Kubernetes as VIM instead Docker Swarm.
-An interesting future work can evaluate this alternative container
+During technologies evaluation we choose Kubernetes as VIM instead of Docker
+Swarm. An interesting future work can evaluate this alternative container
 orchestrator, comparing performances and implementing, if needed, different
-solutions. Also making different Kubernetes instances communicate using creating
+solutions. Also making different Kubernetes instances communicate creating
 a Federation will be a significant enhancement. At the time we developed the
 project this feature was not tested because was not stable yet.
 
 Another component that must be implemented is the \texttt{Classifier}. This
 component can exploit deep packet inspection techniques to both make decisions
-on the chain to be traversed from packets but even to implement make possible to
+on the chain to be traversed from packets but even to make possible to
 detect some sort of attacks as denial of service attacks: discarding packets
-before packets arrive to the final destination can make the end to end
-communications more secure. Also some machine learning capabilities can be added
+before packets arrive to the final destination can improve the end-to-end
+communications security. Also some machine learning capabilities can be added
 to it. Retrieving metrics from the MANO about the communications and
 transmission can help the \texttt{Classifier} to make some decisions.
 
