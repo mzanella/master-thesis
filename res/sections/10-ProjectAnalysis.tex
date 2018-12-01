@@ -1,24 +1,26 @@
 \chapter{Project Analysis}
 \label{chap:prjan}
 
-\section{Project Scheduling}
+\section{Project roadmap}
 \label{chap:prjan:sec:prjsche}
 
-Before starting this project a time scheduling has been carried out, to see
-its feasibility. We calculated at least six months necessary to be able to
-create a working proof of concept (PoC) that allowed us to perform tests and, in
-general, to have a feedback about the solution.
+Prior to starting with the actual implementation of the technical SFC
+specification, we carried out a feasibility analysis in order to estimate the
+required time and activities involved. A pragmatic estimated concluded that a
+six months period was needed in order to create a working proof of concept
+(PoC) that would allow us to perform tests and, in general, to have a feedback
+about the solution.
 
 \subsection{Scheduled timeline}
 Since our knowledge about the technologies was very poor at the beginning, we
 preferred to invest a good chunk of time on studying them, to understand the
-already present products available in the market and to choose what we really
+literature material and industry PoCs and to choose what we really
 needed. Additionally, at the end of this phase we though it was necessary to try
 these products to see if they really fitted our necessities. After this phase,
 we planned to actually starting implementing the missing components to create
 and to fulfill the requirements defined in Section~\ref{chap:prjan:sec:req}.
-Since the required technologies, Java and C/C++ are known to the authors, we
-estimated an eight-week period related to coding and software implementation.
+Since we had prior knowledge on the Java C/C++ languages, we estimated an
+eight-week period related to coding and software implementation.
 After that, two weeks were planned in order to perform tests and gather metrics
 about the system built, and too see how much the job done satisfied our
 expectations. Finally, we estimated four weeks to group and write down all the
@@ -91,7 +93,7 @@ it. \\
 
 \section{Technology evaluation}
 
-\subsection{Openstack}
+\subsection{Openstack platform for cloud computing}
 \begin{figure}[t]
   \centering \includegraphics[scale=0.58]{openstack_logo}
   \caption{Openstack logo}
@@ -125,7 +127,7 @@ were able to install all the components that we wanted and to evaluate different
 technologies.
 
 
-\subsection{Kubernetes}
+\subsection{Kubernetes containers orchestrator}
 \begin{figure}[h]
   \centering \includegraphics[scale=0.35]{kubernetes_logo}
   \caption{Kubernetes Logo}
@@ -153,7 +155,7 @@ Section~\ref{chap:archimpl} and in Section~\ref{chap:impl}. Instead in
 Appendix~\ref{kubernetes} there is a guide on Kubernetes main concepts and how
 to install it, that we create during the project.
 
-\subsection{Docker}
+\subsection{Docker operating-system-level virtualization}
 \begin{figure}[t]
   \centering \includegraphics[scale=0.7]{docker_logo}
   \caption{Official Docker logo}
@@ -190,7 +192,7 @@ taking advantage of Docker Hub from the Dockerfiles specified in our Github
 repository. This also ease the deployment on Kubernetes of components, since
 images where retrieved from the Docker SaaS service.
 
-\subsection{Docker Compose}
+\subsection{Docker Compose tool for multi-container applications}
 \begin{figure}[t]
   \centering \includegraphics[scale=0.5]{dockercompose_logo}
   \caption{Docker Compose logo}
@@ -219,7 +221,7 @@ even because deploying a new component on Kubernetes is quite a cumbersome task,
 requiring both the YAML definition of the application and that images are
 available (or updated) on Docker Hub.
 
-\subsection{Docker Swarm}
+\subsection{Docker Swarm clustering system}
 \begin{figure}[t]
   \centering \includegraphics[scale=1.2]{dockerswarm_logo}
   \caption{Docker Swarm logo}
@@ -245,7 +247,7 @@ traffic load can change dramatically. Moreover, Kubernetes supports up to $5000$
 nodes, instead only Swarm up to $1000$. Finally, more information and
 documentation on Kubernetes was found.
 
-\subsection{OpenvSwitch}
+\subsection{OpenvSwitch multilayer virtual switch}
 \begin{figure}[h]
  \centering \includegraphics[scale=0.45]{ovs}
  \caption{OpenvSwitch logo}
@@ -264,7 +266,7 @@ of a server and it serves as entrypoint to overlay networks running on top of
 physical networks. It is also used in redirect traffic in service chaining use
 cases.
 
-\subsection{Floodlight}
+\subsection{Floodlight open SDN controller}
 \begin{figure}[h]
  \centering \includegraphics[scale=0.6]{floodlight}
  \caption{Floodlight logo}
@@ -284,7 +286,7 @@ work and route traffic. It was lately abandoned due to architectural and
 implementation choices, that moved the task of routing traffic to other
 components.
 
-\subsection{Openbaton}
+\subsection{Openbaton NFV MANO-compliant framework}
 \begin{figure}[h]
   \centering \includegraphics[scale=0.45]{openbaton_logo}
   \caption{Openbaton logo}
@@ -317,7 +319,7 @@ because of its flexibility and possibility to extend it with plugins. Moreover
 it could allow us to register new VIM typologies. Lately due to the difficulties
 to create a Kubernetes driver was abandoned.
 
-\subsection{Dnsmasq}
+\subsection{Dnsmasq network infrastructure tool}
 \begin{figure}[h]
   \centering \includegraphics[scale=0.6]{dnsmasq_logo}
   \caption{Dnsmasq logo}
@@ -331,7 +333,7 @@ server, it has the possibility to perform request caching, to speed up
 additional requests of the same type. On top of that, it provides different
 compilation options in order to eliminate unused features at compile time.
 
-\subsection{Tacker}
+\subsection{Tacker: Openstack VNF Manager and NFV Orchestrator}
 Tacker is an open-source software for NFV Orchestration, released under Apache
 2.0 license, based on ETSI MANO Architectural Framework. This product is
 implemented to both work as Generic VNF Manager and NFV Orchestrator, enabling

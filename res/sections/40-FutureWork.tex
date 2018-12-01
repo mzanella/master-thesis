@@ -1,20 +1,21 @@
 \chapter{Future work}
 \label{chap:future}
 
-Future implementations of this proposal can solve problems discussed
-in~\ref{chap:impl:sec:problems}. Most of them are issues came out due to how we
-developed our code and due to time constraint. Preserving the semantics of the
-components, more efficient implementations are needed to use this approach in
-a real environment, taking more care of resource usages. Another important
-enhancement is to make \harbor{} able to provide scaling and autoscaling
-capabilities to components deployed, in order to exploit all the features given
-by Kubernetes. Moreover it can be integrated with Openbaton. In fact, during the
-study of the available technologies on the market we focused on this MANO
-implementation. It allows developers to expand the solution with drivers and
-plugins to support different VIM and VNFM (so different VNF) types. Thanks to
-\harbor{} APIs it will be possible to develop an Openbaton component whose only
-aim is to call \harbor{} demanding the responsibility to manage a certain
-request. 
+Some further enhancements are needed to solve the problems discussed in
+Chapter~\ref{chap:impl:sec:problems}. Some of these issues could be addressed
+by adopting specialized libraries capable of handling socket I/O in a more
+efficient manner and due to time constraint. Preserving the semantics
+of the components, more efficient implementations are needed to use this
+approach in a real environment, taking more care of resource usages. Another
+important enhancement is to make \harbor{} able to provide scaling and
+autoscaling capabilities to components deployed, in order to exploit all the
+features given by Kubernetes. Moreover it can be integrated with Openbaton. In
+fact, during the study of the available technologies on the market we focused
+on this MANO implementation. It allows developers to expand the solution with
+drivers and plugins to support different VIM and VNFM (so different VNF) types.
+Thanks to \harbor{} APIs it will be possible to develop an Openbaton component
+whose only aim is to call \harbor{} demanding the responsibility to manage a
+certain request.
 
 \harbor{} can also be enhanced improving the chain update system. At the current
 stage all the running chains are updated immediately, but it can be useful in
@@ -53,7 +54,9 @@ features. If the solution is still responsive even under a large traffic load
 implies that the combination of Kubernetes and SFC is a suitable scenario to
 which move network functions.
 
-Finally, we do not take care of security issues because we were implementing a
-testbed. In case of a future release, this topic must be taken into account.
-Components as MANO and the VNFs must be secured to make not possible to an
-intruder to take their control and hijack communications. 
+Concluding, it is important to point out that some security aspects were
+neglected. This is acceptable, also considering the nature and objective of our
+work which was that of providing a proof of concept implementation of an
+experimental technology. Components as MANO and the VNFs must be secured to
+make not possible to an intruder to take their control and hijack
+communications.
