@@ -1,82 +1,84 @@
 \chapter{Related Work}
 \label{chap:rel_wk}
 
-In this chapter are reported some research work related on topics covered in
-this thesis. 
+In this chapter we present some relevant researches related to topics covered
+in this thesis. 
 
 \section{Network Function Virtualization}
 After a through survey of literature material we found several research works
 and actual ETSI-NFV implementations.
 
 An example is the one described in~\cite{nogales2018nfv} in
-which the ETSI MANO architecture is proposed on the top a network of drones.
-This open a wide range of possibilities, allowing to provide connectivity even
-in areas where there are not an infrastructure or it is momentarily not
-available, for example after a natural disaster. Even if this solution is really
-flexible and quick to deploy need a VIM infrastructure to which to be connected.
+which the ETSI MANO architecture is presented on top of a network of drones.
+This opens a wide range of possibilities, allowing to provide connectivity even
+in areas where there is no infrastructure or it is momentarily not
+available, for example after a natural disaster. Even if this solution was
+really flexible and quick to deploy it would need a VIM infrastructure to which
+be connected.
 
-In~\cite{yu2015network}, authors are instead oriented on the study of the
+In~\cite{yu2015network}, authors are instead oriented towards the study of the
 opportunity to deploy the overall system on the top of multi-tenant cloud
 architectures. Challenges in this context concern mainly the possibility to
-enforce requirements, such as policies and performance. Moreover, demanding to
-the cloud infrastructure the resource management means that it must be able to
+enforce requirements, such as policies and performance. Moreover, demanding the
+resource management to the cloud infrastructure means that it must be able to
 optimize the resource utilization.
 
-A significant proposal was presented in~\cite{cziva2017container}, that is one
-of the first paper that evaluate the possibility to use container technology on
+A significant proposal was presented in~\cite{cziva2017container}, one
+of the first papers that evaluate the possibility to use container technology on
 the network edges. This work is based on~\cite{cziva2015container} in which the
-authors define an architecture to orchestrate containers, whose components can
-be mapped on ETSI MANO architectural definition. The usage of containers enable
-the possibility of deployment on less powerful devices and putting them on
-network edge open a wide range of opportunities to classify packets and treat
-them in an adequate manner as soon as possible. Another paper that propose the
-use of containers for VNF is~\cite{hoang2018extended}, in which function are
-deployed both on Openstack and on Kubernetes exploited as VIMs, using TOSCA
-definition to describe containers and Tacker for the management as network
-function orchestrator, even if they does not provide an evaluation of the
-solution. Another aspect to consider is that they not mention the possibility to
-composed their function. Finally, as author stated, standard does not support
-fully features for container by now.
+authors define an architecture that orchestrates containers, and the components
+of which can be mapped on ETSI MANO architectural definition. The usage of
+containers enable the possibility of deployment on less powerful devices, while
+putting them on network edge opens a wide range of opportunities to classify
+packets and treat them in an adequate manner as soon as possible. Another paper
+that proposes the use of containers for VNF is~\cite{hoang2018extended}, in
+which function are deployed both on Openstack and on Kubernetes exploited as
+VIMs, using TOSCA definition to describe containers and Tacker for the
+management as the network function orchestrator, even if they do not provide an
+evaluation of the solution. Another aspect to consider is that they do not
+mention the possibility to compose their function. Finally, as stated by the
+authors, standard does not fully support features for container by now.
 
 
 \section{Network Slicing and Provisioning}
 Network slicing is one of the most important technology improvements that allows
-to move towards the 5G technology. In~\cite{chartsias2017sdn} is presented a
-network slicing approach based on SDN in multi-tenancy scenarios. The testbed
-implemented propose a centralized approach to manage physical and virtual
-resources in different slices. In~\cite{peuster2016medicine} instead, authors
-describe a NFV-based platform, that allows management and orchestration showing
-the importance of virtual function in the network slicing context.
+to move towards the 5G technology. In~\cite{chartsias2017sdn} a
+network slicing approach based on SDN in multi-tenancy scenarios is presented.
+The implemented testbed  proposes a centralized approach to manage physical and
+virtual resources in different slices. In~\cite{peuster2016medicine} instead,
+the authors describe a NFV-based platform, that allows management and
+orchestration showing the importance of virtual function in the network slicing
+context.
 
 This emerging technology open a wide number of new challenges. An example is the
-possibility to ensure proper security on communication, that is harder even due
-to the concept of shared services, that could not provide suitable isolation. 
-In~\cite{kotulski2017end} authors describes possible security issues, stating
+possibility to ensure proper security on communication, hard also due
+to the concept of shared services, that can not provide suitable isolation. 
+In~\cite{kotulski2017end} the authors describe possible security issues, stating
 that the isolation required may vary depending on usage scenarios. Even the ETSI
-MANO system consider isolation only in terms of performance level. Other
+MANO system considers isolation only in terms of performance level. Other
 challenges are highlighted in~\cite{li2017network}, in which in addition to
-isolation and security concerns, point out that resource allocation and
-sharing algorithms possible problems and that some virtualization method, used
+isolation and security concerns, it is pointed out possible problems of resource
+allocation and sharing algorithms and that some virtualization methods, used
 in wired context, cannot be applied in wireless counterpart.
 
 \section{SFC Implementations}
 
-Since the SFC technology was proposed many work came out proposing different
-implementation~\cite{medhat2017service}. In this part there is an overview of
-some of them.
+Since the SFC technology was first proposed, many works came out offering
+different implementation~\cite{medhat2017service} solutions. Some of them are
+presented in the following overview.
 
 The work~\cite{GhaznaviSAB16} proposed an optimization model to calculate the
-optimal location of VNFs based on different metrics such as bandwidth, load
-balancing and routes. This decomposes the SFC on performance requirements,
+optimal location of VNFs, based on different metrics such as bandwidth, load
+balancing and routes. This decomposes the SFC in performance requirements,
 eliminating the throughput bound of a chain to a single VNF or a single physical
-machine. Mathematical models developed was tested in a simulation environment. A
-critical enhancement to this work could be to test algorithm in a real
-environment, under different conditions of traffic load: if it efficient even in
-this scenario it can be useful to the orchestration and management part of the
-ecosystem because it can reduce resource waste.
+machine. Mathematical models developed were tested in a simulation environment. A
+critical enhancement to this work could be achieved by testing the algorithm in
+a real environment, under different conditions of traffic load: if it results
+efficient even in this scenario it could be useful to the orchestration and
+management part of the ecosystem because it could reduce resource waste.
 
-Other implementation tested in a simulated environment
-are~\cite{csoma2014escape} and~\cite{kim2016evaluations}. In both of them the
+\cite{csoma2014escape} and~\cite{kim2016evaluations} are other implementations
+that were tested in a simulated environment. In both of them the
 network functions are deployed on Mininet. The former work provides a full
 implementation of the SFC environment, including SFC configuration, allocating
 VNFs into the physical resources, flow routing across the VNFs based on
@@ -94,58 +96,59 @@ NSH or not. Moreover some implementations, like~\cite{soares2015toward}
 and~\cite{abujoda2015midas} does not allow SFC updating, deploying only static
 chains.
 
-Another noteworthy work is~\cite{xia2015optical} that discuss the packet
+Another noteworthy work is~\cite{xia2015optical} which discusses packet
 delivery through function chaining in high capacity networks exploiting
-aggregate flow steering. The architecture proposed makes use of SDN and cloud
+aggregate flow steering. The architecture proposed uses SDN and cloud
 platforms to deploy VMs that will host VNFs. Assumption are made about the SDN
 network elements: connection through optical circuit switching and use of Wave
 Selective Switching (WSS) to route (switch) signals between optical fibers on a
 per-wavelength basis. Thanks to the implementation of the SDN controller and the
 communication between the previous element and the VNFM, this architecture is
 able to provide good capabilities in terms of flexibility. Another element that
-helps the flexibility is the high performance link: in this way they get rid of
-problems in terms of connection time and bandwidth. However, in the paper
-authors assumes really specific hardware in the underlying infrastructure that
-connects the overall system: this is not suitable to be deployed in a general
-purpose infrastructure or using IaaS. It will be interesting to evaluate the
-same work on different instrumentation. A clashing aspect is the time to make a
-VM up and running compared to times of service chaining configuration/packet
-delivery. Using containers the instantiation of virtual functions should employ
-less time.
+helps with flexibility is the high performance link: in this way they are gotten
+rid of problems in terms of connection time and bandwidth. However, in the
+paper, the  authors ask for a really specific hardware in the underlying
+infrastructure that connects the overall system: this is not suitable to be
+deployed in a general purpose infrastructure or using IaaS. It would be
+interesting to evaluate the same work on different instrumentation. A clashing
+aspect lays in the time to make a VM up and running, compared to times of
+service chaining configuration/packet delivery. Using containers, the
+instantiation of virtual functions should employ less time.
 
-A relevant work on function chaining in network is~\cite{trajkovska2017sdn}. In
-this work authors' efforts are concentrated on joining SDN and VNF technologies
+A relevant work on function chaining in network is~\cite{trajkovska2017sdn}.
+Here the authors' efforts are concentrated on joining SDN and VNF technologies
 to create SFCs. They developed an SDN-driven SDK, a virtual traffic classifier
 to analyze traffic in real-time and decide the optimal chain for it and a VNF
-specialized on video transdecoding, used event to evaluate the performances of
-the whole system. Chaining is performed exploiting layer 2 connectivity, using
-OpenvSwitch as virtual network switches an OpenDayLight in order to route the
+specialized on video transdecoding, used even to evaluate the performances of
+the whole system. Chaining is performed therefore exploiting layer 2
+connectivity, using OpenvSwitch as virtual network switches an OpenDayLight in
+order to route the
 traffic on a set of policies. However the solution does not provide any
-mechanism to perform an automatic deployment of chains and services: this can be
-an issue in particular in case of VNF fault. Orchestration and some mechanisms
-of fault tolerance are critical in a real environment, as enabling
-autoscaling on user demand or traffic load. Automated deployment also make
-possible the recreation of a virtual machine in case of fault. As a matter of
-fact that a virtual function can fail depending on an erroneous load balancing
-policy or too heavy computational load and it is critical in order to do not
-interrupt end-to-end communication to bring up the VNF as soon as possible. This
-recreation process can be slow due to the usage of VMs to deploy the functions,
-that could take minutes to startup.
+mechanism to perform an automatic deployment of chains and services, which can
+be an issue in particular in case of VNF fault. Orchestration and some
+mechanisms of fault tolerance are critical in a real environment, because they
+enable autoscaling on user demand or traffic load. Automated deployment also
+makes the recreation of a virtual machine in case of fault possible. As a matter
+of fact that a virtual function can fail depending on an erroneous load
+balancing policy or too heavy computational load and it is critical to bring up
+the VNF as soon as possible in order to do not interrupt end-to-end
+communication. This recreation process can be slowed down because of the usage
+of VMs to deploy the functions, which could take minutes to startup.
 
-The paper~\cite{kriti2017dnfc} introduce the possibility of using container in
-SFC deployment. The chain of container is created exploiting Openflow to create
-flows to route traffic to the containers, that have to be installed on the host
-machine. This work however does present any form of management or orchestration
-of the chain, neither an automatic deployment. Moreover it requires installation
-of part of the system on the host machine: in this way there is not a fully
-virtualized environment. The former issue has some implication: the VNF has a
-strong relation on the host on which is running and the system could not be
-simply be moved from one machine to another as it could be using a fully
-container-based approach. Finally this paper does not provide any form of system
-evaluation neither in terms of performances nor in terms of resilience. Fault
-recovering and autoscaling could be achieved only improving the system
-introducing other technologies, such as Docker Compose, Kubernetes or Docker
-Swarm.
+The paper~\cite{kriti2017dnfc} introduces the possibility of using containers in
+SFC deployment. The chain of containers is created exploiting Openflow to create
+flows that route traffic to the containers, that has to be installed on the host
+machine. This research however, does not present any form of management or
+orchestration of the chain, neither an automatic deployment. Moreover, it
+requires the installation of part of the system on the host machine: in this way
+there is not a fully virtualized environment. The former issue has some
+implication: the VNF has a strong relation on the host on which is running and
+the system could not be simply be moved from one machine to another as it could
+be using a fully container-based approach. Finally this paper does not provide
+any form of system evaluation neither in terms of performances nor in terms of
+resilience. Fault recovering and autoscaling could be achieved only by improving
+the system introducing other technologies, such as Docker Compose, Kubernetes or
+Docker Swarm.
 
 To the best of our knowledge, all general purposes solutions rely on virtual
 machines, lowering system performance due to overhead caused by hypervisor-based

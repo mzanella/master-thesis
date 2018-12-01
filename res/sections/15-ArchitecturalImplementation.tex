@@ -3,8 +3,7 @@
  
 In this chapter is discussed the architecture of the proposed solution.
 We decided to design a two-layer MANO architecture that will manage
-the service function chains. Along with the architecture is described how it
-will be deployed on Kubernetes.
+the service function chains. In the following we provide a brief overview of its functional components along with some deployment considerations exploiting the Kubernetes orchestration framework.
 
 \section{A top-down Overview}
 \begin{figure}[H]
@@ -36,7 +35,7 @@ services topology focus on hypervisor virtualization and its resource usage.
 This was an issue to our problem in which we have to exploit containers.
 
 \section{Our proposal}
-After evaluating technologies and the starting architecture, we decide to
+After evaluating the technologies and the starting architecture, we decided to
 implement our management and orchestration solution, to be integrated with
 Kubernetes and container technologies, \texttt{Harbor}. It manages data
 repositories for VNFs and SFCs definition as well as their lifecycle.

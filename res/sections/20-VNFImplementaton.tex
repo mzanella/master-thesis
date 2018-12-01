@@ -329,28 +329,28 @@ Rapidoid library for ingoing and outgoing communications.
 \subsection{Kubernetes Deployment}
 Even for this implementation we provide two different deployments, one that
 deploys all the system in a single Pod and the other that exploits the
-possibility to use multiple Pods. The deployments works as before. In the Single
+possibility using multiple Pods. The deployments works as before. In the Single
 Pod one the SFC, the \enchainer{} and the \dispatcher{} are specified onto the
-same Deployments and a Service is specified to be able to reach the
+same Deployments and one Service is specified to be able to reach the
 \enchainer{}. In the Multiple Pods deployment, as previously, each component is
 defined by a different Deployment and exposed by a Service.
 
 \subsection{Problems}
 This second review, since it is based on the code of the previous one, does not
-solve all the problems explained before, as the problem regarding application
+solve all the problems explained before, as in those regarding application
 level communications, the usage of Java as programming language and JSON
 wrapping issues. This solution was developed to study a different topology
-approach, using a centralize element, the \dispatcher{}, that can be the traffic
-orchestrator and can redirect traffic to the \vnfs{}. Also, improving its
-capabilities, it could have more information on transformation that packets must
-pass through and eventually, reclassify the traffic querying the classifier.
-Moreover it provides a total decoupling between SFC platform and network
-functions that must be applied. Thus, there is the drawback of the centralized
-approach. This limit the overall scalability since all function must talk to the
-same component. Exploiting Kubernetes functionalities it is possible to augment
-replicas of the \dispatcher{}, even automatically. Nevertheless, this approach
-seems to be not suitable for large traffic loads and it could be the bottleneck
-of the platform.
+approach, using a centralized element, the \dispatcher{}, that can be the
+traffic orchestrator and can redirect traffic to the \vnfs{}. Also, improving
+its capabilities, it could have more information on transformation that packets
+must pass through and eventually, reclassify the traffic querying the
+classifier. Moreover it provides a complete decoupling between SFC platform and
+network functions that must be applied. Thus, there is the drawback of the
+centralized approach. This limit the overall scalability since all function
+must talk to the same component. Exploiting Kubernetes functionalities it is
+possible to augment replicas of the \dispatcher{}, even automatically.
+Nevertheless, this approach seems to be not suitable for large traffic loads
+and it could be the bottleneck of the platform.
 
 \section{Final proposal}
 
@@ -365,8 +365,8 @@ After the second review, we performed a complete change in terms of
 implementation and technologies used. We redesigned the possible solution based
 on the problems that we found on the first and the second reviews. First two
 reviews were \emph{unidirectional} implementation, since traffic where able
-only to traverse the system from sender to the receiver, this implementation
-instead allows \emph{bidirectional} traffic. The approved proposal is composed
+to traverse the system only from sender to the receiver, this implementation
+allows \emph{bidirectional} traffic instead. The approved proposal is composed
 mainly by four components:
 \begin{itemize}
   \item \astaire{}
@@ -379,11 +379,11 @@ handle it, allowing the automatic deployment.
 
 \subsection{Classification}
 One of the killing feature of the SFC platform is the capability to classify
-traffic based on its typology. In fact, this make the system able to redirect
+traffic based on its typology. In fact, this makes the system able to redirect
 traffic load on the more appropriate chain of network function and, if needed,
 to change the treatment during SFC traverse. Nevertheless, even in the final
 implementation we do not take into account the development of a fully featured
-classifier because it is outer of the scope of this project, although the
+classifier because it is out of the scope of this project, although the
 latter element is considered in the overall system functioning but is
 implemented only as a mock component: based on the protocol type used on
 transport layer used to transmit traffic to the SFC edge, it gives back a
@@ -406,16 +406,16 @@ encapsulation packets such as IP in IP or TCP over TCP.
   \label{chap:prjan:img:tun}
 \end{figure}
 TUN and TAP are virtual kernel interfaces that do not have any physical
-component differently to usual network interfaces. TUN (network TUNnel) operates
-at level 3, as IP packets, TAP (network tap) instead at layer 2, dealing with
-Ethernet packets. Using them in user-space programs they emulates the incoming
-of data from external sources injecting packets to the operating system stack.
-Interfaces can be created as transient (created and destroyed from the same
-program) or persistent (created by some utility and programs attach to them) and
-once created they are seen as hardware interfaces. In network tunnels created
-using this interfaces it is possible to exchange data in secure way over a
-public network as to transmit packets trough a network even if a certain
-protocol is not supported, thanks to the encapsulation that allows, thus,
+component, contrary to usual network interfaces. TUN (network TUNnel) operates
+at level 3, as IP packets do, TAP (network tap) works instead at layer 2,
+dealing with Ethernet packets. In user-space programs they emulate the incoming
+of data from external sources and inject packets to the operating system
+stack. Interfaces can be created as transient (created and destroyed from the
+same program) or persistent (created by some utility and programs attach to
+them). once created they are seen as hardware interfaces. In network tunnels
+created using this interfaces it is possible to exchange data in a secure way
+over a public network and to transmit packets trough a network even if a certain
+protocol is not supported, thanks to the encapsulation that allows, then,
 to maintain unaltered packets inside the tunnel.
 
 \subsubsection*{Packet encapsulation}
@@ -431,10 +431,10 @@ to maintain unaltered packets inside the tunnel.
     layers too, thus allowing for TCP and UDP packet encapsulation.}
   \label{chap:prjan:img:ip_over_ip}
 \end{figure}
-IP in IP encapsulation allow to preserve the original packet making it to
-become the payload of a new packet, that can be elaborated and modified
-accordingly, until it gets decapsulated and, eventually, sent to the
-final receiver. When it receives the packet, it is not aware of the packet
+IP in IP encapsulation allows us to preserve the original packet in order for it
+to become the payload of a new packet, that can be elaborated and modified
+accordingly, until it gets decapsulated and eventually sent to the final
+receiver. When it arrives, the receiver is not aware of the packet
 elaboration, since all the original headers were preserved (or slightly
 modified). In particular, IP in IP allow the packets to pass through
 intermediate destinations that otherwise would not be selected. Split-TCP,
@@ -445,61 +445,60 @@ connection and algorithms. In order to achieve that, a session
 table needs to be established and continuously updated, while TCP headers need
 to be accordingly modified to allow data transmission through the proxies and
 endpoints. Nonetheless, care should be given to packets path: in order to avoid
-ill-calculated congestion windows, the incoming packets need to follow the same 
-(or an equivalent one) path for the same instantiated connection. This
+ill-calculated congestion windows, the incoming packets need to follow the same
+path for the same instantiated connection (or an equivalent one). This
 phenomenon is based on the intermediate proxies that create the route: it is the
-case, for example, when an intermediate node sends back a spoofed ACK before the
-original packet is delivered to the real consignee. In this scenario, the
+case, for example, of when an intermediate node sends back a spoofed ACK before
+the original packet is delivered to the real consignee. In this scenario, the
 sender, unaware of the proxy, will miscalculate the sending window based on the
-too low RTT. Other problems of TCP splitting are reliability and security,
+too low RTT. Reliability and security are two other problems of TCP splitting,
 especially because the end-to-end TCP logic is no longer maintained: a server
-failure may cause to an unaware client to believe that all the packets have
+failure may cause an unaware client to believe that all the packets have
 reached the destination. TCP session recreation seems burdensome and it does not
-seem to add any significant benefit at the first sight, but it offers the
+seem to add any significant benefit at first sight, but it does offer the
 flexibility to perform extensive packet manipulation and use different TCP
-flavors hence increasing performance in heterogeneous networks.
+flavors, hence increasing performance in heterogeneous networks.
 
 \vspace*{1cm}
 
-\noindent In the final review we tried both the two approaches. The tunnelling
+\noindent In the final review we tried both the approaches. The tunnelling
 approach is not suitable for communication among different links of the chain:
 in fact it will create a strong relation among the Pods, nullifying the use of
 Kubernetes services. Moreover, Pods are mortal and if a Pod dies in the tunnel,
-time is required to reconstruct it. Finally creating a tunnel make more
-difficult to update a chain or reclassify a packet during the SFC traverse
-because different tunnel must be created. Also, using a TUN tunnel the
+some time is required to reconstruct it. Ultimately, creating a tunnel makes it
+more difficult to update a chain or reclassify a packet during the SFC traverse
+because different tunnels must be created. Also, using a TUN tunnel the
 communication between the external world and the SFC would be more cumbersome.
-At the other end it will make possible to keep all the headers of the original
-packets easily and make more secure the communication. Encapsulating packets
-give us a more flexible approach and we decided to utilize it even if it does
-not allow us to keep header information in a simple manner. Both for TCP and for
-UDP external connection, the communication among links in the chain uses UDP
-protocol. We choose UDP-encapsulation because this protocol removes some of the
-TCP overhead: it does not implement any form of congestion avoidance mechanisms
-and it does not create a connection among sender and receiver so generally it
-has a lower latency. On the other hand it is unreliable and congestion scenarios
-are not managed.
+On the other end it will make it possible to easily keep all the headers of the
+original packets easily and make the communication more secure. Encapsulating
+packets give us a more flexible approach and we decided to utilize it even if it
+does not allow us to keep header information in a simple manner. Both for TCP
+and for UDP external connection, the communication among links in the chain uses
+UDP protocol. We choose UDP-encapsulation because this protocol removes some of
+the TCP overhead: it does not implement any form of congestion avoidance
+mechanisms and it does not create a connection among sender and receiver so
+generally it has a lower latency. On the other hand it is unreliable and
+congestion scenarios are not managed.
 
 \subsection{Ingresses and egresses: endpoints of the chain}
 \label{chap:impl:subsec:endpoints}
-In both of the previous implementation there was a component that handle the
+In both the previous implementation there was a component that handle the
 traffic before it traverse the chain. In this final solution we developed 
 \ironhide{}\footnote{And available on this repository: 
-\url{https://github.com/Augugrumi/ironhide}}. This
-component is useful not only to manage incoming packets but even the
-communication with the final destination. We called the element of the solution
-that is accountable for the treatment of incoming packets \emph{ingress} and
-similarly the component that handle the communication with the destination is
-called \emph{egress}. Together they are chains \emph{endpoints}. \ironhide{} is
-developed in C++ provide all the functionalities to handle incoming packets from
-the outside of the chain and to deliver packet after the SFC treatment. When 
-\ironhide{} works as \ingress{} it basically operates as a server that accepts
-both TCP and UDP packets. Once a packet arrives it is forwarded to the
-classifier, along with the TCP/UDP-IP headers, that takes decisions on the SFC
-to which it must be forwarded.
+\url{https://github.com/Augugrumi/ironhide}}. This component is useful not only
+to manage incoming packets but even the communication with the final
+destination. We called the element of the solution that is accountable for the
+treatment of incoming packets \emph{ingress} and similarly the component that
+handle the communication with the destination is called \emph{egress}. Together
+they are chains \emph{endpoints}. \ironhide{} is developed in C++ and it
+provides all the functionalities to handle incoming packets from the outside of
+the chain and to deliver packet after the SFC treatment. When \ironhide{} works
+as \ingress{} it basically operates as a server that accepts both TCP and UDP
+packets. Once a packet arrives it is forwarded to the classifier, along with the
+TCP/UDP-IP headers, which chooses the SFC to which it must be forwarded.
 
 The result of the classification is used in the creation of the NSH. During the
-implementation of our solution we only considered the SFC encapsulation with
+implementation of our solution we only considered the SFC encapsulation with a
 Fixed-Length Context Header: we reduce as possible the usage of metadata to be
 exchanged within the header to be as independent as possible to the header
 typology, and the semantic is represented in Figure~\ref{chap:impl:img:nsh}.
@@ -515,7 +514,7 @@ The \texttt{Service Path Header} has a little difference. In fact the
 \texttt{Service Path Identifier} is used as described into the standard but the
 usage of \texttt{Service Index} slightly differ. The RFC defines that in must
 start with all bits set to 1 an each time the packet pass through a link the
-field value have to be decremented. We has done the opposite only for the sake
+field value have to be decremented. We have done the opposite just for the sake
 of clarity and simplicity. A further improvement of the code could only compute
 the opposite of this field. The \texttt{Context Header} is decomposed in:
 \begin{description}
@@ -529,36 +528,36 @@ the opposite of this field. The \texttt{Context Header} is decomposed in:
 \end{description}
 The first four fields are necessary to make the solution to carry information on
 packet source and destination throughout the chain traverse. IPv4
-representation is used but improvements and utilizing a variable length context
+representation is used, but improvements and usage of variable length context
 header can enhance the solution allowing both IPv4 and IPv6 address
 representation. The \texttt{Direction} bit instead is used to make components of
 the chain aware of the direction on which the SFC is traversed. This field is
-not strictly necessary but allows to retrieve this information without actually
-checking which is the previous link that has managed a given packet. 
+not strictly necessary but it allows to retrieve this information without
+actually checking which is the previous link that has managed a given packet. 
 
 Finally, before delivering the packet to the first element of the chain the
-\ingress{} record an entry on a local map to remember the connection with
-the sender of the message. It of paramount important in bidirectional
-communications: in fact the connection with the sender is kept alive to
+\ingress{} records an entry on a local map to remember the connection with
+the sender of the message. This is of paramount importantance in bidirectional
+communications: the connection with the sender is kept alive to
 subsequently deliver the answer of the receiver. In fact, if the latter sends
 back data to the sender, the \ingress{} is able to deliver it thanks this
 saved information.
 
 \texttt{Egress} component waits for communication from the chain an it is in
-charge to forward messages to the destination initially specified from the
+charge of forwarding messages to the destination initially specified from the
 sender before the manipulation of the SFC. To accomplish this task it is
-accountable to establish a connection, TCP or UDP depending on the original
+necessary to establish a connection, TCP or UDP depending on the original
 sender communication protocol used, with the final receiver. In a mirrored way
 as the \ingress{}, the \egress{} after establishing the connection with the
-destination, record communication information unto a map. This in useful when
+destination, record communication information into a map. This in useful when
 more than a single packet must be exchange by end-to-end element of the
 connection.
 
 \subsection{Roulette: Context Information Policies and Chain Definition
 provider}
-In bidirectional communication, that involves a continuous interaction between a
-sender and a receiver, it is needed to not only keep the connection alive
-between sender/receiver and \ingress{}/\egress{} but even to make possible to
+In bidirectional communication, which involves a continuous interaction between a
+sender and a receiver, it is needed not only to keep the connection alive
+between sender/receiver and \ingress{}/\egress{} but also to make it possible to
 retrieve the \ingress{}/\egress{} in case of a set of replicas of these
 components are deployed.
 \begin{exmp}
@@ -599,7 +598,7 @@ The sake of this component is not only to manage \ingresses{} and \egresses{}
 information but it keeps also the definitions of the chains. In fact, once a
 classifier returns the identifier of the SFC that traffic must traverse, the
 complete definition or the link of the chain in a certain position can be
-retrieved querying this element of the platform. SFC definition follow this
+retrieved querying this element of the platform. SFC definition follows this
 pattern:
 
 \begin{lstlisting}[caption={Definition of an SFC on \roulette{}.}, captionpos=b,
