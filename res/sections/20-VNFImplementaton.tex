@@ -537,7 +537,7 @@ actually checking which is the previous link that has managed a given packet.
 
 Finally, before delivering the packet to the first element of the chain the
 \ingress{} records an entry on a local map to remember the connection with
-the sender of the message. This is of paramount importantance in bidirectional
+the sender of the message. This is of paramount importance in bidirectional
 communications: the connection with the sender is kept alive to
 subsequently deliver the answer of the receiver. In fact, if the latter sends
 back data to the sender, the \ingress{} is able to deliver it thanks this
