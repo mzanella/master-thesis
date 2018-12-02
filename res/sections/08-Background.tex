@@ -81,7 +81,7 @@ Figure~\ref{chap:background:img:etsi_arch}:
   information, for managing and orchestrating NFVI and VNFs.
 \end{enumerate}
 
-\begin{figure}
+\begin{figure}[t]
   \centering
   \includegraphics[scale=0.5]{etsi_arch}
   \caption[Network Function Virtualization reference architecture]{Network
@@ -259,6 +259,13 @@ the sharing of physical resources nor the interoperability with non-SDN
 networking.
 
 \subsection{OpenFlow protocol}
+\begin{figure}[t]
+  \centering
+  \includegraphics[scale=0.65]{openflow}
+  \caption{OpenFlow protocol communication graph}
+  \label{chap:background:img:openflow_protocol}
+\end{figure}
+
 The SDN paradigm is often associated with the OpenFlow protocol because it is
 the first standard communications interface defined between the control and the
 datapath in SDN architecture~\cite{fundation2013software}, making possible to
@@ -267,13 +274,6 @@ routers. OpenFlow enables the remote administration of networks working on
 layer 3: packet forwarding tables can be modified relying on packet matching 
 rules. Following this approach, it is possible to change routes periodically or 
 ad-hoc, based on packet types, traffic or network load.
-
-\begin{figure}[t]
- \centering
- \includegraphics[scale=0.65]{openflow}
- \caption{OpenFlow protocol communication graph}
- \label{chap:background:img:openflow_protocol}
-\end{figure}
 
 In Figure~\ref{chap:background:img:openflow_protocol} it is possible to see
 how switches work in the OpenFlow protocol. Basically, OpenFlow switches own a

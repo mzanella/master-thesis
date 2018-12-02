@@ -625,8 +625,8 @@ identifier of the Service that allows to reach a certain VNF is specified and
 the field \texttt{port} specifies the port that must be used to contact the
 Service.
 
-We choose to use the same component for both SFC definitions and 
-\ingress{}/\egresses{} pairing only for time constraint. There are not other
+We chose to use the same component for both SFC definitions and 
+\ingress{}/\egresses{} pairing only for time constraint. There are no other
 limitations that impose that these two pieces of information must be handled by
 the same component. 
 
@@ -817,7 +817,7 @@ SFCs, in order to make them available to \ingresses{}, \egresses{} and
 \astaire{} instances.
 
 \begin{figure}
-  \centering \includegraphics[scale=0.38]{ingress_seq_diagram}
+  \centering \includegraphics[scale=0.35]{ingress_seq_diagram}
   \caption[Sequence diagram - Incoming traffic management]{In the diagram is
   shown how the system works when a packet arrives from a new end-user. 
   \texttt{Ingress} manages packet classification and encapsulation and forwards
@@ -828,7 +828,7 @@ SFCs, in order to make them available to \ingresses{}, \egresses{} and
 \end{figure}
 
 \begin{figure}
-  \centering \includegraphics[scale=0.38]{egress_seq_diagram}
+  \centering \includegraphics[scale=0.35]{egress_seq_diagram}
   \caption[Sequence diagram - Outgoing traffic management]{In the diagram is
   shown how the system works when a packet has to be delivered to destination.
   \texttt{Egress} registers itself on \roulette{}. After it decapsulates the
