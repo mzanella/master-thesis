@@ -13,19 +13,19 @@ the service function chains. In the following we provide a brief overview of its
   \label{chap:archimpl:img:architecture}
 \end{figure}
 In Figure~\ref{chap:archimpl:img:architecture} is depicted the overall
-architecture of the expected implementation. All components communicate each
-other thanks to RabbitMQ and the system is orchestrated by Openbaton. Unlike the
-ETSI NFV framework the technologies involved are defined, and this was the
-system proposal to which we started. The low-level orchestration handles
+architecture of the expected implementation. All components communicate with
+each other thanks to RabbitMQ and the system is orchestrated by Openbaton. Our
+proposal is a refinement of the ETSI NFV framework in which the technologies
+involved are defined. The low-level orchestration handles
 repositories for VNFs and SFCs definitions, monitoring and service deployment.
 
 The higher level, instead, instructs the lower one through the APIs that it
 exposes, configuring and managing services. 
 
-We study this architectural proposal and the technologies proposed but we had
-some troubles with some of the components. In fact, we choose to deploy our
-platform on Kubernetes but we were not able to make Openbaton and this container
-orchestrator work together.
+After this exercise, we performed a technology review and several issues emerged
+In fact, we choose to deploy our
+platform on Kubernetes but, given time and resources, we were not able to make
+Openbaton and this container orchestrator work together.
 
 Openbaton has a plugin structure that allows developer to integrate new
 features. We tried to developed an Openbaton VIM driver to allow this MANO to
@@ -37,9 +37,9 @@ This was an issue to our problem in which we have to exploit containers.
 \section{Our proposal}
 After evaluating the technologies and the starting architecture, we decided to
 implement our management and orchestration solution, to be integrated with
-Kubernetes and container technologies, \texttt{Harbor}. It manages data
+Kubernetes and container technologies, \texttt{Harbor}, our MANO proposal, manages data
 repositories for VNFs and SFCs definition as well as their lifecycle.
-\texttt{Harbor} was implemented to expose a RESTful API that allow managing
+It was implemented to expose a RESTful API that allow managing
 component deployed in a Openbaton-like manner. 
 
 \begin{figure}[H]
@@ -66,5 +66,5 @@ orchestrate other nodes, instead the latter elements, also called
 
 Kubernetes default installation is comprehensive of a DNS, \emph{CoreDNS}, for
 name resolution. In order to reduce the number of requests to the DNS on each
-Minion is deployed a Dnsmasq instance, that is a local DNS cache that cooperate
+Minion is deployed with a Dnsmasq instance, a local DNS cache that cooperate
 with CoreDNS.

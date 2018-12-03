@@ -561,7 +561,8 @@ refers to the same component~\cite{medhat2017service}.
 SFC technology can be used in several scenarios changing the composition of the
 chain, depending on the context in which it will be used.
 
-A use case in which this technology can be exploited is massive IoT. Suppose we
+A use case, depicted in~\ref{chap:background:img:usec} in which this technology can be exploited is massive
+IoT. Suppose we
 have a huge amount of sensor that have to transmit data across the network.
 Usually this kind of devices uses UDP to deliver information and this
 operation could be expensive, since transmission cost could depend on the amount
@@ -574,6 +575,13 @@ reduce the amount of data to deliver, the \emph{VNF-Optimizer} can split the
 communication, using TCP instead of UDP protocol and using different techniques
 to enhance the communication, as header compression or use different TCP
 flavors based on the connection with the receiver.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{usecase}
+  \caption{Example of use case}
+  \label{chap:background:img:usec}
+\end{figure}
 
 Another example in which SFC technology can help to develop an effective
 solution is video streaming. To deliver this kind of service it can be used a
